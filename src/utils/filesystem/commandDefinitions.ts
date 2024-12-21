@@ -10,7 +10,7 @@ export const COMMANDS = {
   pwd: "Print working directory",
   top: "Show most viewed posts",
   log: "Show post history",
-  diff: "Show file differences"
+  diff: "Show file differences",
 } as const;
 
 export type CommandType = keyof typeof COMMANDS;

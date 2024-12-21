@@ -1,4 +1,4 @@
-import eslintPluginAstro from 'eslint-plugin-astro';
+import eslintPluginAstro from "eslint-plugin-astro";
 
 /**
  * @see https://eslint.org/docs/latest/use/configure/configuration-files
@@ -12,6 +12,6 @@ export default [
     rules: {
       // override/add rules settings here, such as:
       // "astro/no-set-html-directive": "error"
-    }
-  }
+    },
+  },
 ];

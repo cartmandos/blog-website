@@ -5,14 +5,10 @@ interface Props {
   className?: string;
 }
 
-const { 
-  containerId,
-  initialOpacity = 0.2,
-  className = "" 
-} = Astro.props;
+const { containerId, initialOpacity = 0.2, className = "" } = Astro.props;
 ---
 
-<canvas 
+<canvas
   class={`matrix-canvas ${className}`}
   data-container={containerId}
   data-initial-opacity={initialOpacity}
@@ -32,23 +28,23 @@ const {
     private isVisible: boolean = false;
 
     constructor(
-      canvasElement: HTMLCanvasElement, 
+      canvasElement: HTMLCanvasElement,
       container: HTMLElement,
-      initialOpacity: number
+      initialOpacity: number,
     ) {
       this.canvas = canvasElement;
       this.container = container;
-      const ctx = this.canvas.getContext('2d');
-      if (!ctx) throw new Error('Could not get canvas context');
+      const ctx = this.canvas.getContext("2d");
+      if (!ctx) throw new Error("Could not get canvas context");
       this.context = ctx;
 
       // Set initial opacity
       this.canvas.style.opacity = initialOpacity.toString();
-      
+
       // Visibility observer
       const observer = new IntersectionObserver(
         (entries) => {
-          entries.forEach(entry => {
+          entries.forEach((entry) => {
             this.isVisible = entry.isIntersecting;
             if (this.isVisible) {
               this.startAnimation();
@@ -57,9 +53,9 @@ const {
             }
           });
         },
-        { threshold: 0.1 }
+        { threshold: 0.1 },
       );
-      
+
       observer.observe(this.container);
       this.init();
     }
@@ -86,17 +82,24 @@ const {
     }
 
     private draw(): void {
-      this.context.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      this.context.fillStyle = "rgba(0, 0, 0, 0.05)";
       this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-      
-      this.context.fillStyle = '#0F0';
+
+      this.context.fillStyle = "#0F0";
       this.context.font = `${this.symbolSize}px monospace`;
-      
+
       for (let i = 0; i < this.drops.length; i++) {
-        const char = String.fromCharCode(0x30A0 + Math.random() * 96);
-        this.context.fillText(char, i * this.symbolSize, this.drops[i] * this.symbolSize);
-        
-        if (this.drops[i] * this.symbolSize > this.canvas.height && Math.random() > 0.975) {
+        const char = String.fromCharCode(0x30a0 + Math.random() * 96);
+        this.context.fillText(
+          char,
+          i * this.symbolSize,
+          this.drops[i] * this.symbolSize,
+        );
+
+        if (
+          this.drops[i] * this.symbolSize > this.canvas.height &&
+          Math.random() > 0.975
+        ) {
           this.drops[i] = 0;
         }
         this.drops[i]++;
@@ -105,7 +108,7 @@ const {
 
     public startAnimation(): void {
       if (!this.isVisible) return;
-      
+
       const animate = () => {
         this.draw();
         this.animationFrameId = setTimeout(() => {
@@ -125,12 +128,14 @@ const {
   }
 
   // Initialize matrices for any canvas elements
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.matrix-canvas').forEach(canvas => {
-      const containerId = canvas.getAttribute('data-container');
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".matrix-canvas").forEach((canvas) => {
+      const containerId = canvas.getAttribute("data-container");
       const container = document.getElementById(containerId!);
-      const initialOpacity = Number(canvas.getAttribute('data-initial-opacity') || 0.2);
-      
+      const initialOpacity = Number(
+        canvas.getAttribute("data-initial-opacity") || 0.2,
+      );
+
       if (container && canvas instanceof HTMLCanvasElement) {
         const matrix = new ContainerMatrix(canvas, container, initialOpacity);
         // Store instance in a map using container ID as key

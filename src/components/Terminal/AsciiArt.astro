@@ -1,15 +1,15 @@
 ---
-import { loadAsciiArt } from '../../utils/ascii';
+import { loadAsciiArt } from "../../utils/ascii";
 
 interface Props {
   content?: string;
   filepath?: string;
 }
 
-const { content, filepath = 'ascii-art.txt' } = Astro.props;
+const { content, filepath = "ascii-art.txt" } = Astro.props;
 
 // Load content from filepath if content is not directly provided
-const displayContent = content ?? await loadAsciiArt(filepath);
+const displayContent = content ?? (await loadAsciiArt(filepath));
 ---
 
 <pre class="ascii-art" aria-label="ASCII art">{displayContent}</pre>

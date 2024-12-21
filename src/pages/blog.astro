@@ -1,8 +1,8 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
-import Terminal from '../components/Terminal/Terminal.astro';
-import { blogSystem } from '../utils/blog/blog';
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Terminal from "../components/Terminal/Terminal.astro";
+import { blogSystem } from "../utils/blog/blog";
 
 const initialOutput = [
   {
@@ -15,13 +15,13 @@ const initialOutput = [
       "  diff <slug> <hash>   Show changes in a specific version",
       "  top [count]          Show most viewed posts",
       "",
-      "Example: cat building-scalable-microservices"
-    ]
+      "Example: cat building-scalable-microservices",
+    ],
   },
   {
     command: "ls -l",
-    output: blogSystem.ls(['-l'])
-  }
+    output: blogSystem.ls(["-l"]),
+  },
 ];
 ---
 
@@ -41,30 +41,34 @@ const initialOutput = [
 </style>
 
 <script>
-  import { blogSystem } from '../utils/blog/blog';
-  
+  import { blogSystem } from "../utils/blog/blog";
+
   // Add blog-specific commands to the command system
   const existingExecuteCommand = window.executeCommand;
-  
+
   window.executeCommand = (cmd: string): string[] => {
     const [command, ...args] = cmd.trim().split(/\s+/);
-    
+
     switch (command) {
-      case 'cat':
-        return args.length ? blogSystem.cat(args[0]) : ['Usage: cat <post-slug>'];
-      
-      case 'log':
-        return args.length ? blogSystem.log(args[0]) : ['Usage: log <post-slug>'];
-      
-      case 'diff':
-        return args.length >= 2 
-          ? blogSystem.diff(args[0], args[1]) 
-          : ['Usage: diff <post-slug> <commit-hash>'];
-      
-      case 'top':
+      case "cat":
+        return args.length
+          ? blogSystem.cat(args[0])
+          : ["Usage: cat <post-slug>"];
+
+      case "log":
+        return args.length
+          ? blogSystem.log(args[0])
+          : ["Usage: log <post-slug>"];
+
+      case "diff":
+        return args.length >= 2
+          ? blogSystem.diff(args[0], args[1])
+          : ["Usage: diff <post-slug> <commit-hash>"];
+
+      case "top":
         const count = args.length ? parseInt(args[0]) : 5;
         return blogSystem.top(count);
-      
+
       default:
         return existingExecuteCommand(cmd);
     }

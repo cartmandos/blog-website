@@ -1,36 +1,41 @@
-import { CommandHistory, getCompletions, executeCommand, fileSystem } from '../../utils/filesystem';
-import { getTimestamp } from '../../utils/time';
+import {
+  CommandHistory,
+  getCompletions,
+  executeCommand,
+  fileSystem,
+} from "../../utils/filesystem";
+import { getTimestamp } from "../../utils/time";
 
 export function initializeTerminal() {
   const history = new CommandHistory();
-  const terminal = document.getElementById('terminal');
-  const input = terminal?.querySelector('.command-text') as HTMLInputElement;
-  
+  const terminal = document.getElementById("terminal");
+  const input = terminal?.querySelector(".command-text") as HTMLInputElement;
+
   if (!input) return;
 
   let currentCompletion: string[] = [];
   let completionIndex = 0;
 
-  input.addEventListener('keydown', handleKeyDown);
-  terminal?.addEventListener('click', () => input.focus());
+  input.addEventListener("keydown", handleKeyDown);
+  terminal?.addEventListener("click", () => input.focus());
   input.focus();
 
   function handleKeyDown(e: KeyboardEvent) {
     switch (e.key) {
-      case 'Enter':
+      case "Enter":
         handleCommand(input.value);
         break;
-      case 'ArrowUp':
+      case "ArrowUp":
         e.preventDefault();
         const prev = history.getPrevious();
         if (prev) input.value = prev;
         break;
-      case 'ArrowDown':
+      case "ArrowDown":
         e.preventDefault();
         const next = history.getNext();
         if (next) input.value = next;
         break;
-      case 'Tab':
+      case "Tab":
         e.preventDefault();
         handleTabCompletion();
         break;
@@ -39,11 +44,11 @@ export function initializeTerminal() {
 
   function handleCommand(cmd: string) {
     if (!cmd.trim()) return;
-    
+
     history.add(cmd);
     const output = executeCommand(cmd.trim());
     appendOutput(cmd, output);
-    input.value = '';
+    input.value = "";
     currentCompletion = [];
     updatePrompt();
   }
@@ -63,8 +68,8 @@ export function initializeTerminal() {
   }
 
   function appendOutput(command: string, output: string[]) {
-    const content = terminal?.querySelector('.terminal-content');
-    const template = document.createElement('template');
+    const content = terminal?.querySelector(".terminal-content");
+    const template = document.createElement("template");
     template.innerHTML = `
       <div class="terminal-output">
         <div class="command-line">
@@ -73,24 +78,24 @@ export function initializeTerminal() {
           <span class="command">${command}</span>
         </div>
         <div class="output">
-          ${output.map(line => `<p>${line}</p>`).join('')}
+          ${output.map((line) => `<p>${line}</p>`).join("")}
         </div>
       </div>
     `;
     content?.insertBefore(template.content, input.parentElement);
-    input.scrollIntoView({ behavior: 'smooth' });
+    input.scrollIntoView({ behavior: "smooth" });
   }
 
   function updatePrompt() {
-    const promptElement = input.parentElement?.querySelector('.prompt');
+    const promptElement = input.parentElement?.querySelector(".prompt");
     if (promptElement) {
       promptElement.textContent = fileSystem.getPrompt();
     }
   }
 
   function clearTerminal() {
-    const content = terminal?.querySelector('.terminal-content');
-    const outputs = content?.querySelectorAll('.terminal-output');
-    outputs?.forEach(output => output.remove());
+    const content = terminal?.querySelector(".terminal-content");
+    const outputs = content?.querySelectorAll(".terminal-output");
+    outputs?.forEach((output) => output.remove());
   }
 }

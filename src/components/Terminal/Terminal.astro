@@ -1,11 +1,11 @@
 ---
-import CommandInput from './CommandInput.astro';
-import TerminalOutput from './TerminalOutput.astro';
-import ContainerMatrix from '../ContainerMatrix.astro';
-import AsciiArt from './AsciiArt.astro';
-import { getTimestamp } from '../../utils/time';
-import { fileSystem } from '../../utils/filesystem/commands';
-import { formatProfileInfo } from '../../utils/profile';
+import CommandInput from "./CommandInput.astro";
+import TerminalOutput from "./TerminalOutput.astro";
+import ContainerMatrix from "../ContainerMatrix.astro";
+import AsciiArt from "./AsciiArt.astro";
+import { getTimestamp } from "../../utils/time";
+import { fileSystem } from "../../utils/filesystem/commands";
+import { formatProfileInfo } from "../../utils/profile";
 
 interface Props {
   initialOutput?: {
@@ -15,27 +15,27 @@ interface Props {
 }
 
 const { initialOutput = [] } = Astro.props;
-const terminalId = 'terminal-container';
+const terminalId = "terminal-container";
 
-const title = 'guest@portfolio';
+const title = "guest@portfolio";
 
 // Your profile information
 const profileInfo = {
-  name: 'Oren Damien Shomrai',
-  title: 'Software Engineer',
-  location: 'Israel',
-  email: 'damien.shomrai@gmail.com',
-  languages: ['Node.js', 'Python'],
-  technologies: ['Docker', 'Kubernetes'],
-  specialization: ['Backend Development', 'Infra'],
-  github: 'github.com/cartmandos',
+  name: "Oren Damien Shomrai",
+  title: "Software Engineer",
+  location: "Israel",
+  email: "damien.shomrai@gmail.com",
+  languages: ["Node.js", "Python"],
+  technologies: ["Docker", "Kubernetes"],
+  specialization: ["Backend Development", "Infra"],
+  github: "github.com/cartmandos",
   // linkedin: 'linkedin.com/in/damien-shomrai',
   // website: 'damienshomrai.com',
 };
 
 // Create neofetch-style initial output
 const neofetchOutput = {
-  command: 'whoami',
+  command: "whoami",
   output: formatProfileInfo(profileInfo),
 };
 
@@ -57,10 +57,10 @@ const defaultOutput = [neofetchOutput, ...initialOutput];
 
     <div class="terminal-content">
       <TerminalOutput
-            command={neofetchOutput.command}
-            output={['']}
-            timestamp={getTimestamp()}
-          />
+        command={neofetchOutput.command}
+        output={[""]}
+        timestamp={getTimestamp()}
+      />
       <div class="neofetch-container">
         <div class="ascii-logo">
           <AsciiArt filepath="profile-outlined.txt" />
@@ -68,8 +68,12 @@ const defaultOutput = [neofetchOutput, ...initialOutput];
 
         <div class="system-info">
           <div class="info-label" set:html={title} />
-          <div class="info-line" set:html={'- '.repeat((title.length / 2) + 1)} />
-          {neofetchOutput.output.map((line) => <div class="info-line" set:html={line} />)}
+          <div class="info-line" set:html={"- ".repeat(title.length / 2 + 1)} />
+          {
+            neofetchOutput.output.map((line) => (
+              <div class="info-line" set:html={line} />
+            ))
+          }
         </div>
       </div>
 
@@ -89,9 +93,9 @@ const defaultOutput = [neofetchOutput, ...initialOutput];
 </div>
 
 <script>
-  import { initializeTerminal } from './terminalClient';
+  import { initializeTerminal } from "./terminalClient";
 
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("DOMContentLoaded", () => {
     initializeTerminal();
   });
 </script>
@@ -159,8 +163,6 @@ const defaultOutput = [neofetchOutput, ...initialOutput];
     background: transparent;
   }
 
-
-
   .neofetch-container {
     display: flex;
     gap: 2rem;
@@ -171,10 +173,9 @@ const defaultOutput = [neofetchOutput, ...initialOutput];
   .ascii-logo {
     flex-shrink: 0;
     min-width: 300px;
-        /* change this margin usage  */
+    /* change this margin usage  */
 
-    margin-right: 50px; 
-    
+    margin-right: 50px;
   }
 
   .system-info {

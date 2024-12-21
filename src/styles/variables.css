@@ -9,10 +9,10 @@
   --terminal-output: #b4b4b4;
   /* --terminal-dark: #0c0c0c;
   --terminal-shadow: rgba(74, 246, 38, 0.2); */
-  
+
   /* Font Settings */
-  --font-mono: 'Fira Code', monospace;
-  
+  --font-mono: "Fira Code", monospace;
+
   /* Animations */
   --cursor-blink-speed: 1s;
 }

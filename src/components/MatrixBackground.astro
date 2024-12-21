@@ -1,4 +1,4 @@
-<canvas 
+<canvas
   id="matrix-canvas"
   class="fixed inset-0 w-full h-full pointer-events-none opacity-20 transition-opacity duration-300"
   data-testid="matrix-background"
@@ -16,15 +16,15 @@
 
     constructor(canvasElement: HTMLCanvasElement) {
       this.canvas = canvasElement;
-      const ctx = this.canvas.getContext('2d');
-      if (!ctx) throw new Error('Could not get canvas context');
+      const ctx = this.canvas.getContext("2d");
+      if (!ctx) throw new Error("Could not get canvas context");
       this.context = ctx;
       this.init();
     }
 
     private init(): void {
       this.resizeCanvas();
-      window.addEventListener('resize', () => this.resizeCanvas());
+      window.addEventListener("resize", () => this.resizeCanvas());
       this.startAnimation();
     }
 
@@ -36,17 +36,24 @@
     }
 
     private draw(): void {
-      this.context.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      this.context.fillStyle = "rgba(0, 0, 0, 0.05)";
       this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-      
-      this.context.fillStyle = '#0F0';
+
+      this.context.fillStyle = "#0F0";
       this.context.font = `${this.symbolSize}px monospace`;
-      
+
       for (let i = 0; i < this.drops.length; i++) {
-        const char = String.fromCharCode(0x30A0 + Math.random() * 96);
-        this.context.fillText(char, i * this.symbolSize, this.drops[i] * this.symbolSize);
-        
-        if (this.drops[i] * this.symbolSize > this.canvas.height && Math.random() > 0.975) {
+        const char = String.fromCharCode(0x30a0 + Math.random() * 96);
+        this.context.fillText(
+          char,
+          i * this.symbolSize,
+          this.drops[i] * this.symbolSize,
+        );
+
+        if (
+          this.drops[i] * this.symbolSize > this.canvas.height &&
+          Math.random() > 0.975
+        ) {
           this.drops[i] = 0;
         }
         this.drops[i]++;
@@ -73,8 +80,10 @@
   }
 
   // Initialize the animation when the document is ready
-  document.addEventListener('DOMContentLoaded', () => {
-    const canvas = document.getElementById('matrix-canvas') as HTMLCanvasElement;
+  document.addEventListener("DOMContentLoaded", () => {
+    const canvas = document.getElementById(
+      "matrix-canvas",
+    ) as HTMLCanvasElement;
     if (canvas) {
       const matrixAnimation = new MatrixAnimation(canvas);
 

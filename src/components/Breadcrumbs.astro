@@ -7,40 +7,40 @@ const { path } = Astro.props;
 
 // Convert URL path to breadcrumb segments
 function getPathSegments(path: string) {
-  const cleanPath = path.endsWith('/') ? path.slice(0, -1) : path;
-  if (cleanPath === '') return [{ label: 'home', icon: 'ph-house' }];
+  const cleanPath = path.endsWith("/") ? path.slice(0, -1) : path;
+  if (cleanPath === "") return [{ label: "home", icon: "ph-house" }];
 
-  const segments = cleanPath.split('/').filter(Boolean);
+  const segments = cleanPath.split("/").filter(Boolean);
   return segments.map((segment, index) => {
     // Determine icon based on segment
-    let icon = 'ph-file';
-    if (index === 0) icon = 'ph-house';
-    else if (segments.length - 1 !== index) icon = 'ph-folder';
+    let icon = "ph-file";
+    if (index === 0) icon = "ph-house";
+    else if (segments.length - 1 !== index) icon = "ph-folder";
     else {
       // File type icons based on extension or name
       switch (segment) {
-        case 'about':
-          icon = 'ph-user';
+        case "about":
+          icon = "ph-user";
           break;
-        case 'projects':
-          icon = 'ph-folder';
+        case "projects":
+          icon = "ph-folder";
           break;
-        case 'blog':
-          icon = 'ph-newspaper';
+        case "blog":
+          icon = "ph-newspaper";
           break;
-        case 'contact':
-          icon = 'ph-envelope';
+        case "contact":
+          icon = "ph-envelope";
           break;
         default:
-          if (segment.endsWith('.astro')) icon = 'ph-file-code';
-          else if (segment.endsWith('.md')) icon = 'ph-file-text';
+          if (segment.endsWith(".astro")) icon = "ph-file-code";
+          else if (segment.endsWith(".md")) icon = "ph-file-text";
       }
     }
 
     return {
       label: segment,
-      path: '/' + segments.slice(0, index + 1).join('/'),
-      icon
+      path: "/" + segments.slice(0, index + 1).join("/"),
+      icon,
     };
   });
 }
@@ -49,21 +49,23 @@ const segments = getPathSegments(path);
 ---
 
 <nav class="breadcrumbs" aria-label="breadcrumb">
-  {segments.map((segment, index) => (
-    <>
-      <a 
-        href={segment.path} 
-        class="breadcrumb-item"
-        aria-current={index === segments.length - 1 ? "page" : undefined}
-      >
-        <i class={`ph ${segment.icon}`}></i>
-        <span>{segment.label}</span>
-      </a>
-      {index < segments.length - 1 && (
-        <i class="ph ph-caret-right separator"></i>
-      )}
-    </>
-  ))}
+  {
+    segments.map((segment, index) => (
+      <>
+        <a
+          href={segment.path}
+          class="breadcrumb-item"
+          aria-current={index === segments.length - 1 ? "page" : undefined}
+        >
+          <i class={`ph ${segment.icon}`} />
+          <span>{segment.label}</span>
+        </a>
+        {index < segments.length - 1 && (
+          <i class="ph ph-caret-right separator" />
+        )}
+      </>
+    ))
+  }
 </nav>
 
 <style>

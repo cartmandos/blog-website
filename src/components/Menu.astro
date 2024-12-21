@@ -1,5 +1,5 @@
 ---
-import { menuItems } from '../stores/menuItems';
+import { menuItems } from "../stores/menuItems";
 
 interface Props {
   currentPath: string;
@@ -18,7 +18,11 @@ const { currentPath } = Astro.props;
 
     {
       menuItems.map((item) => (
-        <button class="activity-item" data-section={item.id} aria-label={item.label}>
+        <button
+          class="activity-item"
+          data-section={item.id}
+          aria-label={item.label}
+        >
           <i class={`ph ${item.icon}`} />
         </button>
       ))
@@ -41,7 +45,7 @@ const { currentPath } = Astro.props;
             </button>
             <div class="section-content">
               {item.children?.map((child) =>
-                child.type === 'directory' ? (
+                child.type === "directory" ? (
                   <div class="subsection">
                     <button class="section-header">
                       <i class="ph ph-chevron-right section-arrow" />
@@ -52,7 +56,10 @@ const { currentPath } = Astro.props;
                       {child.children?.map((subChild) => (
                         <a
                           href={subChild.path}
-                          class:list={['menu-item', { active: currentPath === subChild.path }]}
+                          class:list={[
+                            "menu-item",
+                            { active: currentPath === subChild.path },
+                          ]}
                         >
                           <i class={`ph ${subChild.icon}`} />
                           <span>{subChild.label}</span>
@@ -63,12 +70,15 @@ const { currentPath } = Astro.props;
                 ) : (
                   <a
                     href={child.path}
-                    class:list={['menu-item', { active: currentPath === child.path }]}
+                    class:list={[
+                      "menu-item",
+                      { active: currentPath === child.path },
+                    ]}
                   >
                     <i class={`ph ${child.icon}`} />
                     <span>{child.label}</span>
                   </a>
-                )
+                ),
               )}
             </div>
           </div>
@@ -79,35 +89,37 @@ const { currentPath } = Astro.props;
 </aside>
 
 <script>
-  import { menuStore } from '../stores/menuStore';
+  import { menuStore } from "../stores/menuStore";
 
   // Initialize event listeners
   function initializeMenu() {
-    const menu = document.getElementById('side-menu');
-    const activityItems = document.querySelectorAll('.activity-item');
-    const sectionHeaders = document.querySelectorAll('.section-header');
+    const menu = document.getElementById("side-menu");
+    const activityItems = document.querySelectorAll(".activity-item");
+    const sectionHeaders = document.querySelectorAll(".section-header");
 
     // Apply initial state
     const state = menuStore.getState();
-    menu?.classList.toggle('expanded', state.expanded);
+    menu?.classList.toggle("expanded", state.expanded);
     state.collapsedSections.forEach((sectionId) => {
-      const section = document.querySelector(`[data-section-id="${sectionId}"]`);
-      section?.classList.add('collapsed');
+      const section = document.querySelector(
+        `[data-section-id="${sectionId}"]`,
+      );
+      section?.classList.add("collapsed");
     });
 
     // Activity bar clicks
     activityItems.forEach((item) => {
-      item.addEventListener('click', () => {
+      item.addEventListener("click", () => {
         menuStore.toggleExpanded();
       });
     });
 
     // Section header clicks
     sectionHeaders.forEach((header) => {
-      header.addEventListener('click', (e) => {
+      header.addEventListener("click", (e) => {
         e.preventDefault();
-        const section = header.closest('[data-section-id]');
-        const sectionId = section?.getAttribute('data-section-id');
+        const section = header.closest("[data-section-id]");
+        const sectionId = section?.getAttribute("data-section-id");
         if (sectionId) {
           menuStore.toggleSection(sectionId);
         }
@@ -117,19 +129,22 @@ const { currentPath } = Astro.props;
     // Subscribe to store changes
     menuStore.subscribe(() => {
       const state = menuStore.getState();
-      menu?.classList.toggle('expanded', state.expanded);
+      menu?.classList.toggle("expanded", state.expanded);
 
-      document.querySelectorAll('.section').forEach((section) => {
-        const sectionId = section.getAttribute('data-section-id');
+      document.querySelectorAll(".section").forEach((section) => {
+        const sectionId = section.getAttribute("data-section-id");
         if (sectionId) {
-          section.classList.toggle('collapsed', state.collapsedSections.has(sectionId));
+          section.classList.toggle(
+            "collapsed",
+            state.collapsedSections.has(sectionId),
+          );
         }
       });
     });
   }
 
   // Initialize on page load and navigation
-  document.addEventListener('astro:page-load', initializeMenu);
+  document.addEventListener("astro:page-load", initializeMenu);
 </script>
 
 <style>

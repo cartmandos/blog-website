@@ -1,0 +1,28 @@
+---
+import { loadAsciiArt } from '../../utils/ascii';
+
+interface Props {
+  content?: string;
+  filepath?: string;
+}
+
+const { content, filepath = 'ascii-art.txt' } = Astro.props;
+
+// Load content from filepath if content is not directly provided
+const displayContent = content ?? await loadAsciiArt(filepath);
+---
+
+<pre class="ascii-art" aria-label="ASCII art">{displayContent}</pre>
+
+<style>
+  .ascii-art {
+    font-family: monospace;
+    font-size: 0.125rem;
+    line-height: 1.1;
+    overflow-x: auto;
+    margin: 1rem 0;
+    white-space: pre;
+    /* color: var(--terminal-bright); */
+    max-width: 100%;
+  }
+</style>

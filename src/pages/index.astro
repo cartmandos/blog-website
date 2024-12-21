@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Terminal from '../components/Terminal/Terminal.astro';
+
+const initialOutput = [
+  {
+    command: "echo 'Welcome to my portfolio!'",
+    output: [
+      'Welcome to my interactive terminal portfolio.',
+      "Type 'help' to see available commands.",
+      '',
+    ],
+  },
+];
+---
+
+<Layout title="Terminal Portfolio">
+  <Header pageName="Home" currentPath="/" />
+  <main>
+    <Terminal initialOutput={initialOutput} />
+  </main>
+</Layout>
+
+<style>
+  main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+</style>

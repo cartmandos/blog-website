@@ -1,0 +1,46 @@
+---
+// import Favicon from '../assets/Favicon.astro';
+// import SomeOtherTags from './SomeOtherTags.astro';
+
+interface Props {
+  title: string;
+  props?: Record<string, never>;
+}
+
+const { title, ...props } = Astro.props;
+---
+
+<link rel="sitemap" href="/sitemap-index.xml" />
+<title>{title}</title>
+
+<meta name="description" content="Oren Damien Shomrai's blog" />
+<meta name="viewport" content="width=device-width" />
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+<meta name="generator" content={Astro.generator} />
+<title>{title}</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap"
+  rel="stylesheet"
+/>
+
+<!-- Web analytics -->
+<!-- <script data-goatcounter="https://my-account.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script> -->
+
+<!-- Open Graph tags -->
+<meta property="og:title" content="Oren Damien Shomrai" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="http://www.damienshomrai.com" />
+<meta property="og:description" content="Oren Damien Shomrai's blog" />
+<!-- <meta property="og:image" content="http://www.damienshomrai.com/seo-banner.webp" /> -->
+<meta property="og:image:alt" content="" />
+
+<!-- <SomeOtherTags /> -->
+
+<!-- <Favicon /> -->

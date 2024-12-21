@@ -1,0 +1,157 @@
+---
+interface Props {
+  containerId: string;
+  initialOpacity?: number;
+  className?: string;
+}
+
+const { 
+  containerId,
+  initialOpacity = 0.2,
+  className = "" 
+} = Astro.props;
+---
+
+<canvas 
+  class={`matrix-canvas ${className}`}
+  data-container={containerId}
+  data-initial-opacity={initialOpacity}
+  aria-hidden="true"
+>
+</canvas>
+
+<script>
+  class ContainerMatrix {
+    private canvas: HTMLCanvasElement;
+    private context: CanvasRenderingContext2D;
+    private symbolSize: number = 14;
+    private fps: number = 30;
+    private drops: number[] = [];
+    private animationFrameId: number = 0;
+    private container: HTMLElement;
+    private isVisible: boolean = false;
+
+    constructor(
+      canvasElement: HTMLCanvasElement, 
+      container: HTMLElement,
+      initialOpacity: number
+    ) {
+      this.canvas = canvasElement;
+      this.container = container;
+      const ctx = this.canvas.getContext('2d');
+      if (!ctx) throw new Error('Could not get canvas context');
+      this.context = ctx;
+
+      // Set initial opacity
+      this.canvas.style.opacity = initialOpacity.toString();
+      
+      // Visibility observer
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            this.isVisible = entry.isIntersecting;
+            if (this.isVisible) {
+              this.startAnimation();
+            } else {
+              this.stopAnimation();
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+      
+      observer.observe(this.container);
+      this.init();
+    }
+
+    private init(): void {
+      this.resizeCanvas();
+      this.setupResizeObserver();
+      if (this.isVisible) {
+        this.startAnimation();
+      }
+    }
+
+    private setupResizeObserver(): void {
+      const resizeObserver = new ResizeObserver(() => this.resizeCanvas());
+      resizeObserver.observe(this.container);
+    }
+
+    private resizeCanvas(): void {
+      const rect = this.container.getBoundingClientRect();
+      this.canvas.width = rect.width;
+      this.canvas.height = rect.height;
+      const columns = Math.ceil(this.canvas.width / this.symbolSize);
+      this.drops = Array(columns).fill(1);
+    }
+
+    private draw(): void {
+      this.context.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      
+      this.context.fillStyle = '#0F0';
+      this.context.font = `${this.symbolSize}px monospace`;
+      
+      for (let i = 0; i < this.drops.length; i++) {
+        const char = String.fromCharCode(0x30A0 + Math.random() * 96);
+        this.context.fillText(char, i * this.symbolSize, this.drops[i] * this.symbolSize);
+        
+        if (this.drops[i] * this.symbolSize > this.canvas.height && Math.random() > 0.975) {
+          this.drops[i] = 0;
+        }
+        this.drops[i]++;
+      }
+    }
+
+    public startAnimation(): void {
+      if (!this.isVisible) return;
+      
+      const animate = () => {
+        this.draw();
+        this.animationFrameId = setTimeout(() => {
+          requestAnimationFrame(animate);
+        }, 1000 / this.fps);
+      };
+      animate();
+    }
+
+    public stopAnimation(): void {
+      clearTimeout(this.animationFrameId);
+    }
+
+    public setOpacity(value: number): void {
+      this.canvas.style.opacity = value.toString();
+    }
+  }
+
+  // Initialize matrices for any canvas elements
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.matrix-canvas').forEach(canvas => {
+      const containerId = canvas.getAttribute('data-container');
+      const container = document.getElementById(containerId!);
+      const initialOpacity = Number(canvas.getAttribute('data-initial-opacity') || 0.2);
+      
+      if (container && canvas instanceof HTMLCanvasElement) {
+        const matrix = new ContainerMatrix(canvas, container, initialOpacity);
+        // Store instance in a map using container ID as key
+        if (!(window as any).containerMatrices) {
+          (window as any).containerMatrices = new Map();
+        }
+        (window as any).containerMatrices.set(containerId, matrix);
+      }
+    });
+  });
+</script>
+
+<style>
+  .matrix-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    transition: opacity 0.3s ease;
+  }
+</style>

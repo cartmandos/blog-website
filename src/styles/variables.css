@@ -1,0 +1,18 @@
+:root {
+  /* Terminal Colors */
+  --terminal-green: #00ff00;
+  --terminal-dark: #0a0a0a;
+  --terminal-shadow: rgba(0, 255, 0, 0.2);
+  --terminal-header: #1a1a1a;
+  --terminal-dim: #666666;
+  --terminal-bright: #ffffff;
+  --terminal-output: #b4b4b4;
+  /* --terminal-dark: #0c0c0c;
+  --terminal-shadow: rgba(74, 246, 38, 0.2); */
+  
+  /* Font Settings */
+  --font-mono: 'Fira Code', monospace;
+  
+  /* Animations */
+  --cursor-blink-speed: 1s;
+}

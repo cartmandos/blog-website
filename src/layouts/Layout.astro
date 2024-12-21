@@ -1,0 +1,261 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Head from '@components/Head.astro';
+import Menu from '@components/Menu.astro';
+
+
+const { title, ...props } = Astro.props;
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <Head title={title} />
+    <ClientRouter />
+  </head>
+  <body>
+    <!-- <div id="theme-controls" class="fixed top-4 right-4 z-50">
+      <button id="theme-toggle" class="p-2 rounded-md bg-terminal-header text-terminal-green border border-terminal-green">
+        🌙
+      </button>
+      <button id="focus-toggle" class="ml-2 p-2 rounded-md bg-terminal-header text-terminal-green border border-terminal-green">
+        👁️
+      </button>
+    </div> -->
+    <Menu currentPath={currentPath} />
+    <slot />
+
+    <script>
+      // Theme definitions
+      const THEMES = {
+        DARK: {
+          '--terminal-green': '#00ff00',
+          '--terminal-dark': '#0a0a0a',
+          '--terminal-bright': '#ffffff',
+          '--terminal-dim': '#666666',
+          '--terminal-header': '#1a1a1a',
+          '--terminal-shadow': 'rgba(0, 255, 0, 0.2)',
+          '--terminal-output': '#cccccc',
+        },
+        LIGHT: {
+          '--terminal-green': '#008800',
+          '--terminal-dark': '#ffffff',
+          '--terminal-bright': '#000000',
+          '--terminal-dim': '#999999',
+          '--terminal-header': '#f0f0f0',
+          '--terminal-shadow': 'rgba(0, 136, 0, 0.1)',
+          '--terminal-output': '#333333',
+        },
+      };
+
+      // Initialize theme from localStorage
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+      
+      // Theme controls
+      const themeToggle = document.getElementById('theme-toggle');
+      const focusToggle = document.getElementById('focus-toggle');
+      const matrixAnimation = (window as any).matrixAnimation;
+
+      if (themeToggle) {
+        themeToggle.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+        
+        themeToggle.addEventListener('click', () => {
+          const isDark = document.documentElement.classList.toggle('dark');
+          themeToggle.textContent = isDark ? '🌙' : '☀️';
+          localStorage.setItem('theme', isDark ? 'dark' : 'light');
+          
+          const theme = isDark ? THEMES.DARK : THEMES.LIGHT;
+          Object.entries(theme).forEach(([key, value]) => {
+            document.documentElement.style.setProperty(key, value);
+          });
+        });
+      }
+
+      // Focus mode
+      let isFocused = false;
+      if (focusToggle && matrixAnimation) {
+        focusToggle.addEventListener('click', () => {
+          isFocused = !isFocused;
+          matrixAnimation.setOpacity(isFocused ? 0.05 : 0.2);
+          focusToggle.textContent = isFocused ? '👁️‍🗨️' : '👁️';
+        });
+      }
+
+      // Keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        // Ctrl/Cmd + Shift + L: Toggle theme
+        if (e.key === 'L' && (e.ctrlKey || e.metaKey) && e.shiftKey) {
+          e.preventDefault();
+          themeToggle?.click();
+        }
+        
+        // Ctrl/Cmd + Shift + F: Toggle focus mode
+        if (e.key === 'F' && (e.ctrlKey || e.metaKey) && e.shiftKey) {
+          e.preventDefault();
+          focusToggle?.click();
+        }
+      });
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    /* Default dark theme values */
+    --terminal-green: #00ff00;
+    --terminal-dark: #0a0a0a;
+    --terminal-bright: #ffffff;
+    --terminal-dim: #666666;
+    --terminal-header: #1a1a1a;
+    --terminal-shadow: rgba(0, 255, 0, 0.2);
+    --terminal-output: #cccccc;
+    --cursor-blink-speed: 1s;
+    --font-mono: 'Fira Code', monospace;
+  }
+
+  /* Theme transitions */
+  html {
+    transition: color 0.3s ease, background-color 0.3s ease;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    min-height: 100vh;
+    padding: 2rem;
+    background: var(--terminal-dark);
+    color: var(--terminal-green);
+    font-family: var(--font-mono);
+  }
+
+  .bg-terminal-header {
+    background-color: var(--terminal-header);
+  }
+
+  .text-terminal-green {
+    color: var(--terminal-green);
+  }
+
+  .border-terminal-green {
+    border-color: var(--terminal-green);
+  }
+</style>
+
+<!-- ---
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Software Engineer Portfolio" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	</head>
+	<body>
+		<div class="matrix-bg"></div>
+		<slot />
+	</body>
+</html>
+<style is:global>
+	:root {
+		--terminal-green: #00ff00;
+		--terminal-dark: #0a0a0a;
+		--terminal-shadow: rgba(0, 255, 0, 0.2);
+	}
+	
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+
+	html {
+		font-family: 'Fira Code', monospace;
+		background: var(--terminal-dark);
+		color: var(--terminal-green);
+	}
+
+	body {
+		min-height: 100vh;
+		padding: 2rem;
+	}
+
+	.matrix-bg {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
+		z-index: -1;
+		opacity: 0.1;
+		background: repeating-linear-gradient(
+			0deg,
+			var(--terminal-dark) 0%,
+			var(--terminal-dark) 50%,
+			transparent 50%,
+			transparent 100%
+		);
+		background-size: 4px 4px;
+		animation: scroll 20s linear infinite;
+	}
+
+	@keyframes scroll {
+		0% {
+			background-position: 0 0;
+		}
+		100% {
+			background-position: 0 100%;
+		}
+	}
+
+	.terminal-window {
+		background: var(--terminal-dark);
+		border: 1px solid var(--terminal-green);
+		box-shadow: 0 0 20px var(--terminal-shadow);
+		padding: 1rem;
+		border-radius: 4px;
+		margin-bottom: 2rem;
+	}
+
+	.command-prompt {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.command-prompt::before {
+		content: ">";
+		color: var(--terminal-green);
+	}
+
+	@keyframes blink {
+		0%, 100% { opacity: 1; }
+		50% { opacity: 0; }
+	}
+
+	.cursor {
+		display: inline-block;
+		width: 8px;
+		height: 1em;
+		background-color: var(--terminal-green);
+		animation: blink 1s step-end infinite;
+	}
+</style> -->

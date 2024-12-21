@@ -1,0 +1,52 @@
+---
+interface Props {
+  command: string;
+  output: string[];
+  timestamp: string;
+}
+
+const { command, output, timestamp } = Astro.props;
+---
+
+<div class="terminal-output">
+  <div class="command-line">
+    <span class="timestamp">[{timestamp}]</span>
+    <span class="prompt">guest@portfolio:~$</span>
+    <span class="command">{command}</span>
+  </div>
+  <div class="output">
+    {output.map(line => <p>{line}</p>)}
+  </div>
+</div>
+
+<style>
+  .terminal-output {
+    margin-bottom: 1rem;
+    opacity: 0.9;
+  }
+
+  .command-line {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .timestamp {
+    color: var(--terminal-dim);
+  }
+
+  .prompt {
+    color: var(--terminal-green);
+  }
+
+  .command {
+    color: var(--terminal-bright);
+  }
+
+  .output {
+    padding-left: 1rem;
+    color: var(--terminal-output);
+    white-space: pre;
+    /* font-family: monospace; */
+  }
+</style>

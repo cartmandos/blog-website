@@ -1,0 +1,259 @@
+---
+import { menuItems } from '../stores/menuItems';
+
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+---
+
+<aside id="side-menu" class="menu">
+  <!-- Activity Bar -->
+  <div class="activity-bar">
+    <!-- Menu Toggle -->
+    <button class="activity-item">
+      <i class="ph ph-list ph-menu"></i>
+    </button>
+
+    {
+      menuItems.map((item) => (
+        <button class="activity-item" data-section={item.id} aria-label={item.label}>
+          <i class={`ph ${item.icon}`} />
+        </button>
+      ))
+    }
+  </div>
+
+  <!-- Explorer Panel -->
+  <div class="explorer-panel">
+    <div class="explorer-header">
+      <span class="header-label">EXPLORER</span>
+    </div>
+    <div class="explorer-content">
+      {
+        menuItems.map((item) => (
+          <div class="section" data-section-id={item.id}>
+            <button class="section-header">
+              <i class="ph ph-chevron-right section-arrow" />
+              <i class={`ph ${item.icon}`} />
+              <span>{item.label}</span>
+            </button>
+            <div class="section-content">
+              {item.children?.map((child) =>
+                child.type === 'directory' ? (
+                  <div class="subsection">
+                    <button class="section-header">
+                      <i class="ph ph-chevron-right section-arrow" />
+                      <i class={`ph ${child.icon}`} />
+                      <span>{child.label}</span>
+                    </button>
+                    <div class="section-content">
+                      {child.children?.map((subChild) => (
+                        <a
+                          href={subChild.path}
+                          class:list={['menu-item', { active: currentPath === subChild.path }]}
+                        >
+                          <i class={`ph ${subChild.icon}`} />
+                          <span>{subChild.label}</span>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <a
+                    href={child.path}
+                    class:list={['menu-item', { active: currentPath === child.path }]}
+                  >
+                    <i class={`ph ${child.icon}`} />
+                    <span>{child.label}</span>
+                  </a>
+                )
+              )}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</aside>
+
+<script>
+  import { menuStore } from '../stores/menuStore';
+
+  // Initialize event listeners
+  function initializeMenu() {
+    const menu = document.getElementById('side-menu');
+    const activityItems = document.querySelectorAll('.activity-item');
+    const sectionHeaders = document.querySelectorAll('.section-header');
+
+    // Apply initial state
+    const state = menuStore.getState();
+    menu?.classList.toggle('expanded', state.expanded);
+    state.collapsedSections.forEach((sectionId) => {
+      const section = document.querySelector(`[data-section-id="${sectionId}"]`);
+      section?.classList.add('collapsed');
+    });
+
+    // Activity bar clicks
+    activityItems.forEach((item) => {
+      item.addEventListener('click', () => {
+        menuStore.toggleExpanded();
+      });
+    });
+
+    // Section header clicks
+    sectionHeaders.forEach((header) => {
+      header.addEventListener('click', (e) => {
+        e.preventDefault();
+        const section = header.closest('[data-section-id]');
+        const sectionId = section?.getAttribute('data-section-id');
+        if (sectionId) {
+          menuStore.toggleSection(sectionId);
+        }
+      });
+    });
+
+    // Subscribe to store changes
+    menuStore.subscribe(() => {
+      const state = menuStore.getState();
+      menu?.classList.toggle('expanded', state.expanded);
+
+      document.querySelectorAll('.section').forEach((section) => {
+        const sectionId = section.getAttribute('data-section-id');
+        if (sectionId) {
+          section.classList.toggle('collapsed', state.collapsedSections.has(sectionId));
+        }
+      });
+    });
+  }
+
+  // Initialize on page load and navigation
+  document.addEventListener('astro:page-load', initializeMenu);
+</script>
+
+<style>
+  .menu {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    bottom: 0;
+    display: flex;
+    z-index: 100;
+    font-size: 0.875rem;
+  }
+
+  .activity-bar {
+    width: 48px;
+    background: var(--vscode-bg);
+    border-right: 1px solid var(--vscode-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 0.5rem;
+    gap: 0.5rem;
+  }
+
+  .activity-item {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--vscode-fg);
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .activity-item:hover {
+    background: var(--vscode-hover-bg);
+  }
+
+  .activity-item i {
+    font-size: 24px;
+  }
+
+  .explorer-panel {
+    width: 0;
+    background: var(--vscode-bg);
+    border-right: 1px solid var(--vscode-border);
+    overflow: hidden;
+    transition: width 0.2s ease-out;
+    opacity: 0;
+  }
+
+  .menu.expanded .explorer-panel {
+    width: 260px;
+    opacity: 1;
+  }
+
+  .explorer-header {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--vscode-dim);
+    text-transform: uppercase;
+  }
+
+  .explorer-content {
+    padding: 0.5rem 0;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 1rem;
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--vscode-fg);
+    cursor: pointer;
+  }
+
+  .section-header:hover {
+    background: var(--vscode-hover-bg);
+  }
+
+  .section-arrow {
+    font-size: 14px;
+    transition: transform 0.2s;
+  }
+
+  .collapsed .section-arrow {
+    transform: rotate(-90deg);
+  }
+
+  .section-content {
+    padding-left: 1rem;
+  }
+
+  .collapsed .section-content {
+    display: none;
+  }
+
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 1rem;
+    color: var(--vscode-fg);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+  }
+
+  .menu-item:hover {
+    background: var(--vscode-hover-bg);
+  }
+
+  .menu-item.active {
+    border-left-color: var(--vscode-active-bg);
+    background: var(--vscode-hover-bg);
+  }
+
+  .menu-item i {
+    font-size: 16px;
+  }
+</style>

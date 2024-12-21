@@ -1,0 +1,114 @@
+---
+interface Props {
+  path: string;
+}
+
+const { path } = Astro.props;
+
+// Convert URL path to breadcrumb segments
+function getPathSegments(path: string) {
+  const cleanPath = path.endsWith('/') ? path.slice(0, -1) : path;
+  if (cleanPath === '') return [{ label: 'home', icon: 'ph-house' }];
+
+  const segments = cleanPath.split('/').filter(Boolean);
+  return segments.map((segment, index) => {
+    // Determine icon based on segment
+    let icon = 'ph-file';
+    if (index === 0) icon = 'ph-house';
+    else if (segments.length - 1 !== index) icon = 'ph-folder';
+    else {
+      // File type icons based on extension or name
+      switch (segment) {
+        case 'about':
+          icon = 'ph-user';
+          break;
+        case 'projects':
+          icon = 'ph-folder';
+          break;
+        case 'blog':
+          icon = 'ph-newspaper';
+          break;
+        case 'contact':
+          icon = 'ph-envelope';
+          break;
+        default:
+          if (segment.endsWith('.astro')) icon = 'ph-file-code';
+          else if (segment.endsWith('.md')) icon = 'ph-file-text';
+      }
+    }
+
+    return {
+      label: segment,
+      path: '/' + segments.slice(0, index + 1).join('/'),
+      icon
+    };
+  });
+}
+
+const segments = getPathSegments(path);
+---
+
+<nav class="breadcrumbs" aria-label="breadcrumb">
+  {segments.map((segment, index) => (
+    <>
+      <a 
+        href={segment.path} 
+        class="breadcrumb-item"
+        aria-current={index === segments.length - 1 ? "page" : undefined}
+      >
+        <i class={`ph ${segment.icon}`}></i>
+        <span>{segment.label}</span>
+      </a>
+      {index < segments.length - 1 && (
+        <i class="ph ph-caret-right separator"></i>
+      )}
+    </>
+  ))}
+</nav>
+
+<style>
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+    color: var(--vscode-fg);
+    height: 100%;
+    padding: 0 0.5rem;
+  }
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: inherit;
+    text-decoration: none;
+    padding: 0.125rem 0.25rem;
+    border-radius: 3px;
+  }
+
+  .breadcrumb-item:hover {
+    background-color: var(--vscode-hover-bg);
+  }
+
+  .breadcrumb-item i {
+    font-size: 14px;
+    opacity: 0.8;
+  }
+
+  .separator {
+    font-size: 12px;
+    opacity: 0.5;
+    margin: 0 0.125rem;
+  }
+
+  /* Style for the current page */
+  .breadcrumb-item[aria-current="page"] {
+    opacity: 0.8;
+    cursor: default;
+  }
+
+  .breadcrumb-item[aria-current="page"]:hover {
+    background-color: transparent;
+  }
+</style>

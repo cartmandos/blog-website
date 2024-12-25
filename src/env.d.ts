@@ -4,4 +4,5 @@
 interface Window {
   // Add types for global context here
   executeCommand: (cmd: string) => string[];
+  matrixAnimation: MatrixAnimation;
 }

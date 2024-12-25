@@ -2,7 +2,7 @@
 import EditorMode from "./EditorMode.astro"
 import PreviewMode from "./PreviewMode.astro"
 import ModeToggle from "./ModeToggle.astro"
-import type { PageProps } from "@/types/page"
+import type { PageProps } from "@/types"
 import Breadcrumbs from "../Breadcrumbs.astro"
 
 interface Props extends PageProps {}
@@ -42,7 +42,7 @@ const pageId = crypto.randomUUID()
 </article>
 
 <script>
-  import type { ViewMode } from "@/types/page"
+  import type { ViewMode } from "@/types"
 
   function initializePage(pageElement: Element) {
     const pageId = pageElement.getAttribute("data-page-id")!

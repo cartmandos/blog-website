@@ -1,13 +1,13 @@
 export async function loadAsciiArt(filepath: string): Promise<string> {
   try {
     // Using dynamic filepath with type safety
-    const modules = import.meta.glob<string>("/assets/ascii/**/*.txt", {
+    const modules = import.meta.glob<string>("/src/assets/ascii/**/*.txt", {
       as: "raw",
       eager: true,
     });
 
     // Check if the requested file exists
-    const fullPath = `/assets/ascii/${filepath}`;
+    const fullPath = `/src/assets/ascii/${filepath}`;
     if (!(fullPath in modules)) {
       throw new Error(`ASCII art file not found: ${filepath}`);
     }

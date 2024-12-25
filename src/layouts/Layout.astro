@@ -1,8 +1,11 @@
 ---
 import { ClientRouter } from "astro:transitions"
-import Head from "@/components/Head.astro"
+import Head from "@/components/BaseHead.astro"
 import Menu from "@/components/Menu.astro"
 import Footer from "@/components/Footer.astro"
+import Header from "@/components/Header.astro"
+import '../assets/styles/global.css'
+
 
 const { title, ...props } = Astro.props
 const currentPath = Astro.url.pathname
@@ -16,9 +19,10 @@ const currentPath = Astro.url.pathname
     <ClientRouter />
   </head>
   <body>
+    <Header pageName="Home" currentPath={currentPath} />
     <Menu currentPath={currentPath} />
     <slot />
-    <!-- <Footer /> -->
+    <Footer />
 
     <script>
       // Theme definitions
@@ -50,7 +54,7 @@ const currentPath = Astro.url.pathname
       // Theme controls
       const themeToggle = document.getElementById("theme-toggle")
       const focusToggle = document.getElementById("focus-toggle")
-      const matrixAnimation = (window as any).matrixAnimation
+      const matrixAnimation = window.matrixAnimation
 
       if (themeToggle) {
         themeToggle.textContent = savedTheme === "dark" ? "🌙" : "☀️"

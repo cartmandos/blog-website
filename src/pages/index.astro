@@ -1,11 +1,10 @@
 ---
-import Header from "@/components/Header.astro"
 import Page from "@/components/Page/PageView.astro"
 import Terminal from "@/components/Terminal/Terminal.astro"
 import Layout from "@/layouts/Layout.astro"
-import '../styles/globals.css'
+import { DEFAULT_VIEW_MODE } from "@/constants"
 
-const initialOutput = [
+const initTerminalOutput = [
   {
     command: "echo 'Welcome to my portfolio!'",
     output: [
@@ -17,51 +16,44 @@ const initialOutput = [
 ]
 
 const pageContent = `# About Me
+Backend Engineer with focus on Infrastructure, Platform Engineering and Security.
 
-Hello! I'm a software engineer with a passion for building great products.
+Creator of bingie, a popular open-source graphical UI powered by Kodi with 10k+ active users globally. 
 
 ## Skills
 
-- TypeScript/JavaScript
-- React
-- Node.js
-- Python
+📌 Backend: Node.js, Fastify, NestJS, Flask, FastAPI, Celery, OWASP, RabbitMQ.
+📌 Web Technologies: React, HTML/CSS, WebSockets/SSE, OpenAPI, RESTful APIs.
+📌 Databases: PostgreSQL, MySQL, Microsoft SQL Server, MongoDB, Redis.
+📌 Platform Engineering: Linux (debian/rhel), Networking, L4/L7 Proxy (Nginx/Haproxy), Docker, GitHub Actions, Azure.
 
-## Code Example
+## Code
 
-\`\`\`typescript
-function greeting(name: string): string {
-  return \`Hello, \${name}!\`;
+\`\`\`bash
+$ curl -X POST https://blog.oren.sh
+{
+  "status": 200,
+  "message": "Welcome back to my Blog!"
 }
 \`\`\`
 
-> I love working with modern web technologies and creating user-friendly experiences.
+> I 🤍 building functional stuff WITH and FOR people. 
 
 # Projects
 
-- [Project 1](https://example.com)
-- [Project 2](https://example.com)
-- [Project 3](https://example.com)
+- [BINGIE](https://example.com) - bringing to Kodi's ecosystem a full-blown Netflix-like experience,
+such that your friends won't be able to tell which is which.
 
-# Contact
+### You can find me on:
 
-- LinkedIn: [linkedin.com/in/](https://linkedin.com/in/)`
+- [LinkedIn](https://linkedin.com/in/oren-shomrai)
+- [GitHub](https://github.com/cartmandos)`
 ---
 
 <Layout title="Terminal Portfolio">
-  <Header pageName="Home" currentPath="/" />
   <main>
-    <Page content={pageContent} title="About Me" initialMode="preview" />
-    <Terminal initialOutput={initialOutput} />
+    <Page content={pageContent} title="About" initialMode={DEFAULT_VIEW_MODE} />
+    <Terminal initialOutput={initTerminalOutput} />
   </main>
 </Layout>
 
-<style>
-  main {
-    /* max-width: 800px; */
-    /* margin: 0 auto;
-    padding: 2rem; */
-    width: 100%;
-    margin: 0 auto;
-  }
-</style>

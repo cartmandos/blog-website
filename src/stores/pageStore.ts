@@ -1,4 +1,4 @@
-import type { ViewMode } from "../types/page";
+import type { ViewMode } from "@/types"
 
 class PageStore {
   private state = new Map<string, ViewMode>();

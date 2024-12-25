@@ -88,7 +88,7 @@
       const matrixAnimation = new MatrixAnimation(canvas);
 
       // Expose the animation instance to window for external control
-      (window as any).matrixAnimation = matrixAnimation;
+      window.matrixAnimation = matrixAnimation;
     }
   });
 </script>

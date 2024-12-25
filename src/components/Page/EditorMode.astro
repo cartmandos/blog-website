@@ -57,7 +57,10 @@ const highlightedContent = Prism.highlight(
     margin: 0;
     padding: 1rem;
     background: transparent;
-    overflow-x: auto;
+    /** if we wrap then line-numbers don't match 
+    overflow: hidden;
+    white-space: pre-wrap; */
+    
   }
 
   /* Syntax highlighting styles */

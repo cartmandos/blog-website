@@ -1,6 +1,5 @@
 ---
-import { loadAsciiArt } from "../../utils/ascii";
-
+import {loadAsciiArt} from "../../utils/ascii.ts";
 interface Props {
   content?: string;
   filepath?: string;
@@ -8,11 +7,17 @@ interface Props {
 
 const { content, filepath = "ascii-art.txt" } = Astro.props;
 
+// console.log(loadAsciiArt(filepath));
+// import.meta.glob(`/src/assets/ascii-art/${filepath}?raw`, { eager: true });
+
 // Load content from filepath if content is not directly provided
-const displayContent = content ?? (await loadAsciiArt(filepath));
+// const displayContent = content ?? (await loadAsciiArt(filepath));
 ---
 
-<pre class="ascii-art" aria-label="ASCII art">{displayContent}</pre>
+<pre class="ascii-art" aria-label="ASCII art">
+  <Fragment>{loadAsciiArt(filepath)}</Fragment>
+  
+  </pre>
 
 <style>
   .ascii-art {

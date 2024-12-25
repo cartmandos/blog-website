@@ -15,12 +15,12 @@ marked.setOptions({
 })
 
 // Initial server-side markdown processing
-const rawHtmlContent = marked.parse(content)
+const rawHtmlContent = marked.parse(content, { async: true })
 ---
 
 <div class={`preview-mode`} data-page-id={pageId}>
-  <div class="preview-content" data-raw-content={rawHtmlContent}>
-    <!-- Content will be inserted here -->
+  <div class="preview-content" data-raw-content={await rawHtmlContent}>
+    <!-- <Fragment set:html={rawHtmlContent} /> -->
   </div>
 </div>
 

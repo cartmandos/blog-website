@@ -1,8 +1,12 @@
+---
+const today = new Date();
+---
+
 <footer class="footer-container">
     <div class="footer-content">
           <div class="page-title">
             <span class="title-text">
-                Oren Damien Shomrai (c) 2025
+                &copy; {today.getFullYear()} Oren Damien Shomrai
             </span>
           </div>
       </div>
@@ -10,7 +14,7 @@
 
 <style>
     footer {
-        position: fixed;
+        /* position: fixed; */
         bottom: 0;
         width: 100%;
         height: 2rem;
@@ -22,7 +26,7 @@
         /* display: flex; */
         /* align-items: center; */
         /* justify-content: center; */
-        border-top: 1px solid var(--vscode-border);
+        /* border-top: 1px solid var(--vscode-border); */
         /* padding: 0.5rem 1rem; */
 
     }

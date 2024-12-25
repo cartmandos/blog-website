@@ -212,43 +212,6 @@ const {
 </script>
 
 <style>
-  /* VSCode Dracula Theme Colors */
-  /* :root {
-    --vscode-bg: #282a36;
-    --vscode-fg: #f8f8f2;
-    --vscode-hover-bg: #44475a;
-    --vscode-active-bg: #6272a4;
-    --vscode-border: #191a21;
-    --vscode-tooltip-bg: #21222c;
-    --header-height: 35px;
-  } */
-  :root {
-    /* Dark theme (default) */
-    --vscode-bg: #1e1e1e;
-    --vscode-fg: #d4d4d4;
-    --vscode-hover-bg: #2a2d2e;
-    --vscode-active-bg: #37373d;
-    --vscode-border: #454545;
-    --vscode-tooltip-bg: #252526;
-    --header-height: 35px;
-  }
-
-  /* Light theme variables */
-  :root.light {
-    --vscode-bg: #ffffff;
-    --vscode-fg: #333333;
-    --vscode-hover-bg: #f0f0f0;
-    --vscode-active-bg: #e8e8e8;
-    --vscode-border: #e0e0e0;
-    --vscode-tooltip-bg: #f8f8f8;
-  }
-
-  body {
-    transition:
-      background-color 0.3s ease,
-      color 0.3s ease;
-  }
-
   .vscode-header {
     background-color: var(--vscode-bg);
     border-bottom: 1px solid var(--vscode-border);
@@ -259,16 +222,6 @@ const {
     left: 0;
     z-index: 1000;
   }
-
-  /* .header-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0 0.5rem;
-  } */
 
   .center-group {
     display: flex;
@@ -436,8 +389,4 @@ const {
     opacity: 1;
   }
 
-  /* Add margin to main content to account for fixed header */
-  :global(body) {
-    margin-top: var(--header-height);
-  }
 </style>

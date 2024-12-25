@@ -1,4 +1,4 @@
-import type { ProfileInfo, ProfileField } from "../types/profile";
+import type { ProfileInfo, ProfileField } from "@/types"
 
 // profile information
 const profileInfo = {

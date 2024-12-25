@@ -1,4 +1,4 @@
-import type { MenuState } from "../types/menu";
+import type { MenuState } from "@/types"
 
 class MenuStore {
   private state: MenuState = {

@@ -1,32 +1,24 @@
 ---
-import { menuItems } from "../stores/menuItems";
+import { menuItems } from "../consts"
 
 interface Props {
-  currentPath: string;
+  currentPath: string
 }
 
-const { currentPath } = Astro.props;
+const { currentPath } = Astro.props
 ---
 
 <aside id="side-menu" class="menu">
   <!-- Activity Bar -->
   <div class="activity-bar">
     <!-- Menu Toggle -->
-    <button class="activity-item main-menu-toggle" aria-label="Toggle Menu">
+    <button
+      class="activity-item main-menu-toggle"
+      aria-label="Toggle Menu"
+      data-section="menu"
+    >
       <i class="ph ph-list ph-menu"></i>
     </button>
-
-    <!-- {
-      menuItems.map((item) => (
-        <button
-          class="activity-item"
-          data-section={item.id}
-          aria-label={item.label}
-        >
-          <i class={`ph ${item.icon}`} />
-        </button>
-      ))
-    } -->
   </div>
 
   <!-- Explorer Panel -->
@@ -89,62 +81,60 @@ const { currentPath } = Astro.props;
 </aside>
 
 <script>
-  import { menuStore } from "../stores/menuStore";
+  import { menuStore } from "../stores/menuStore"
 
   // Initialize event listeners
   function initializeMenu() {
-    const menu = document.getElementById("side-menu");
-    const activityItems = document.querySelectorAll(".activity-item");
-    const sectionHeaders = document.querySelectorAll(".section-header");
+    const menu = document.getElementById("side-menu")
+    const activityItems = document.querySelectorAll(".activity-item")
+    const sectionHeaders = document.querySelectorAll(".section-header")
 
     // Apply initial state
-    const state = menuStore.getState();
-    menu?.classList.toggle("expanded", state.expanded);
+    const state = menuStore.getState()
+    menu?.classList.toggle("expanded", state.expanded)
     state.collapsedSections.forEach((sectionId) => {
-      const section = document.querySelector(
-        `[data-section-id="${sectionId}"]`,
-      );
-      section?.classList.add("collapsed");
-    });
+      const section = document.querySelector(`[data-section-id="${sectionId}"]`)
+      section?.classList.add("collapsed")
+    })
 
     // Activity bar clicks
     activityItems.forEach((item) => {
       item.addEventListener("click", () => {
-        menuStore.toggleExpanded();
-      });
-    });
+        menuStore.toggleExpanded()
+      })
+    })
 
     // Section header clicks
     sectionHeaders.forEach((header) => {
       header.addEventListener("click", (e) => {
-        e.preventDefault();
-        const section = header.closest("[data-section-id]");
-        const sectionId = section?.getAttribute("data-section-id");
+        e.preventDefault()
+        const section = header.closest("[data-section-id]")
+        const sectionId = section?.getAttribute("data-section-id")
         if (sectionId) {
-          menuStore.toggleSection(sectionId);
+          menuStore.toggleSection(sectionId)
         }
-      });
-    });
+      })
+    })
 
     // Subscribe to store changes
     menuStore.subscribe(() => {
-      const state = menuStore.getState();
-      menu?.classList.toggle("expanded", state.expanded);
+      const state = menuStore.getState()
+      menu?.classList.toggle("expanded", state.expanded)
 
       document.querySelectorAll(".section").forEach((section) => {
-        const sectionId = section.getAttribute("data-section-id");
+        const sectionId = section.getAttribute("data-section-id")
         if (sectionId) {
           section.classList.toggle(
             "collapsed",
             state.collapsedSections.has(sectionId),
-          );
+          )
         }
-      });
-    });
+      })
+    })
   }
 
   // Initialize on page load and navigation
-  document.addEventListener("astro:page-load", initializeMenu);
+  document.addEventListener("astro:page-load", initializeMenu)
 </script>
 
 <style>
@@ -185,8 +175,6 @@ const { currentPath } = Astro.props;
     /* border-radius: 4px; */
     cursor: pointer;
   }
-
-
 
   .menu.expanded .main-menu-toggle {
     border-left: 2px solid green;

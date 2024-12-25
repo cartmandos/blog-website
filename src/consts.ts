@@ -1,4 +1,6 @@
-import type { MenuItem } from "../types/menu";
+import type { MenuItem } from "@/types"
+
+export const DEFAULT_VIEW_MODE = "preview";
 
 export const menuItems: MenuItem[] = [
   {

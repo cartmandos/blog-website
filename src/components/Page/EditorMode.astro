@@ -1,0 +1,93 @@
+---
+import Prism from "prismjs";
+import "prismjs/components/prism-markdown";
+
+interface Props {
+  content: string;
+  pageId: string;
+}
+
+const { content, pageId } = Astro.props;
+
+const lines = content.split("\n");
+const highlightedContent = Prism.highlight(
+  content,
+  Prism.languages.markdown,
+  "markdown",
+);
+---
+
+<div class={`editor-mode`} data-page-id={pageId}>
+  <div class="line-numbers">
+    {lines.map((_, index) => <span class="line-number">{index + 1}</span>)}
+  </div>
+  <pre
+    class="editor-content">
+    <code class="language-markdown" set:html={highlightedContent} />
+  </pre>
+</div>
+
+<style>
+  .editor-mode {
+    display: flex;
+    min-height: 100%;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.5;
+    tab-size: 2;
+  }
+
+  .line-numbers {
+    flex-shrink: 0;
+    padding: 1rem 0;
+    background: var(--vscode-bg);
+    border-right: 1px solid var(--vscode-border);
+    user-select: none;
+  }
+
+  .line-number {
+    display: block;
+    padding: 0 1rem;
+    color: var(--vscode-dim);
+    text-align: right;
+  }
+
+  .editor-content {
+    flex: 1;
+    margin: 0;
+    padding: 1rem;
+    background: transparent;
+    overflow-x: auto;
+  }
+
+  /* Syntax highlighting styles */
+  .editor-content :global(.token.heading) {
+    color: #bd93f9;
+  }
+
+  .editor-content :global(.token.bold) {
+    color: #ffb86c;
+    font-weight: bold;
+  }
+
+  .editor-content :global(.token.italic) {
+    color: #f1fa8c;
+    font-style: italic;
+  }
+
+  .editor-content :global(.token.list) {
+    color: #ff79c6;
+  }
+
+  .editor-content :global(.token.link) {
+    color: #8be9fd;
+  }
+
+  .editor-content :global(.token.code) {
+    color: #50fa7b;
+  }
+
+  .editor-content :global(.token.blockquote) {
+    color: #6272a4;
+  }
+</style>

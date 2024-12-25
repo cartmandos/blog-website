@@ -292,7 +292,8 @@ that scale effectively in modern cloud environments.
     return results.length > 0 ? results : [`No matches found for: ${pattern}`];
   }
 
-  private getNodeAtPath(path: string): FileSystemNode | null {
+  //TODO: change back to private after refactoring "getPathCompletions"
+  public getNodeAtPath(path: string): FileSystemNode | null {
     const parts = path.startsWith("/")
       ? path.split("/").filter(Boolean)
       : [...this.currentPath, ...path.split("/").filter(Boolean)];

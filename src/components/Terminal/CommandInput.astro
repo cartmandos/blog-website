@@ -1,60 +1,62 @@
 ---
 // CommandInput.astro
 interface Props {
-  prompt?: string;
+  prompt?: string
 }
 
-const { prompt = "guest@portfolio:~$" } = Astro.props;
+const { prompt = "guest@portfolio:~$" } = Astro.props
 ---
 
 <div class="command-input" id="commandInput">
-  <span class="prompt">{prompt}</span>
-  <input
-    name="stdin"
-    type="text"
-    class="command-text"
-    autocomplete="off"
-    spellcheck="false"
-  />
-  <div class="completion-preview"></div>
-  <span class="cursor"></span>
+  <label for="stdin" class="prompt">{prompt}</label>
+  <div class="input-container">
+    <input
+      id="stdin"
+      type="text"
+      class="command-text"
+      autocomplete="off"
+      spellcheck="false"
+    />
+    <div class="completion-preview"></div>
+    <span class="cursor"></span>
+  </div>
 </div>
 
 <script>
-  import { COMMANDS, fileSystem } from "../../utils/filesystem";
+  import { COMMANDS, fileSystem } from "../../utils/filesystem"
 
   interface CompletionContext {
-    currentPath: string;
-    input: string;
-    pathParts: string[];
-    lastPart: string;
-    isPath: boolean;
+    currentPath: string
+    input: string
+    pathParts: string[]
+    lastPart: string
+    isPath: boolean
   }
 
   class AutoComplete {
-    private input: HTMLInputElement;
-    private preview: HTMLElement;
-    private completions: string[] = [];
-    private completionIndex: number = -1;
+    private input: HTMLInputElement
+    private preview: HTMLElement
+    private completions: string[] = []
+    private completionIndex: number = -1
 
     constructor(inputElement: HTMLInputElement, previewElement: HTMLElement) {
-      this.input = inputElement;
-      this.preview = previewElement;
-      this.setupEventListeners();
+      this.input = inputElement
+      this.preview = previewElement
+      this.setupEventListeners()
     }
 
     private setupEventListeners() {
-      this.input.addEventListener("input", () => this.handleInput());
-      this.input.addEventListener("keydown", (e) => this.handleKeydown(e));
+      this.input.addEventListener("input", () => this.handleInput())
+      this.input.addEventListener("keydown", (e) => this.handleKeydown(e))
     }
 
     private getCompletionContext(): CompletionContext {
-      const input = this.input.value;
-      const parts = input.split(" ");
-      const lastPart = parts[parts.length - 1];
-      const isPath = lastPart.includes("/");
-      const pathParts = lastPart.split("/");
-      const currentPath = pathParts.slice(0, -1).join("/");
+      const input = this.input.value
+      const parts = input.split(" ")
+      const lastPart = parts[parts.length - 1]
+      const isPath = lastPart.includes("/")
+      const pathParts = lastPart.split("/")
+      const currentPath = pathParts.slice(0, -1).join("/")
 
       return {
         currentPath,
@@ -62,111 +64,111 @@ const { prompt = "guest@portfolio:~$" } = Astro.props;
         pathParts,
         lastPart,
         isPath,
-      };
+      }
     }
 
     private async handleInput() {
-      const context = this.getCompletionContext();
+      const context = this.getCompletionContext()
 
       // Reset completion state
-      this.completions = [];
-      this.completionIndex = -1;
-      this.preview.textContent = "";
+      this.completions = []
+      this.completionIndex = -1
+      this.preview.textContent = ""
 
-      if (!context.input.trim()) return;
+      if (!context.input.trim()) return
 
       // Get completions based on input type
       if (context.input.indexOf(" ") === -1) {
         // Command completion
         this.completions = Object.keys(COMMANDS).filter((cmd) =>
           cmd.startsWith(context.input),
-        );
+        )
       } else if (context.isPath) {
         // Path completion
-        const path = context.currentPath || "/";
-        const files = fileSystem.ls(path);
-        const prefix = context.pathParts[context.pathParts.length - 1];
+        const path = context.currentPath || "/"
+        const files = fileSystem.ls(path)
+        const prefix = context.pathParts[context.pathParts.length - 1]
 
         this.completions = files
           .filter((file) => file.startsWith(prefix))
           .map((file) => {
-            const fullPath = `${path}/${file}`.replace(/\/+/g, "/");
-            return context.input.slice(0, -context.lastPart.length) + fullPath;
-          });
+            const fullPath = `${path}/${file}`.replace(/\/+/g, "/")
+            return context.input.slice(0, -context.lastPart.length) + fullPath
+          })
       }
 
       // Show preview if completions available
       if (this.completions.length > 0) {
-        this.showCompletion(0, false);
+        this.showCompletion(0, false)
       }
     }
 
     private handleKeydown(e: KeyboardEvent) {
-      if (this.completions.length === 0) return;
+      if (this.completions.length === 0) return
 
       switch (e.key) {
         case "Tab":
-          e.preventDefault();
+          e.preventDefault()
           if (e.shiftKey) {
             this.showCompletion(
               (this.completionIndex - 1 + this.completions.length) %
                 this.completions.length,
               true,
-            );
+            )
           } else {
             this.showCompletion(
               (this.completionIndex + 1) % this.completions.length,
               true,
-            );
+            )
           }
-          break;
+          break
 
         case "ArrowRight":
           if (this.preview.textContent && e.ctrlKey) {
-            e.preventDefault();
-            this.acceptCompletion();
+            e.preventDefault()
+            this.acceptCompletion()
           }
-          break;
+          break
 
         case "Escape":
-          this.clearCompletions();
-          break;
+          this.clearCompletions()
+          break
       }
     }
 
     private showCompletion(index: number, apply: boolean) {
-      this.completionIndex = index;
-      const completion = this.completions[index];
+      this.completionIndex = index
+      const completion = this.completions[index]
 
       if (apply) {
-        this.input.value = completion;
-        this.preview.textContent = "";
+        this.input.value = completion
+        this.preview.textContent = ""
       } else {
-        const preview = completion.slice(this.input.value.length);
-        this.preview.textContent = preview;
+        const preview = completion.slice(this.input.value.length)
+        this.preview.textContent = preview
       }
     }
 
     private acceptCompletion() {
       if (this.completionIndex >= 0) {
-        this.input.value = this.completions[this.completionIndex];
-        this.clearCompletions();
+        this.input.value = this.completions[this.completionIndex]
+        this.clearCompletions()
       }
     }
 
     private clearCompletions() {
-      this.completions = [];
-      this.completionIndex = -1;
-      this.preview.textContent = "";
+      this.completions = []
+      this.completionIndex = -1
+      this.preview.textContent = ""
     }
   }
 
   // Initialize autocompletion
-  const input = document.querySelector(".command-text") as HTMLInputElement;
-  const preview = document.querySelector(".completion-preview") as HTMLElement;
+  const input = document.querySelector(".command-text") as HTMLInputElement
+  const preview = document.querySelector(".completion-preview") as HTMLElement
 
   if (input && preview) {
-    new AutoComplete(input, preview);
+    new AutoComplete(input, preview)
   }
 </script>
 
@@ -178,6 +180,11 @@ const { prompt = "guest@portfolio:~$" } = Astro.props;
     margin-top: 1rem;
     position: relative;
     caret-color: transparent;
+  }
+
+  .input-container {
+    position: relative;
+    display: inline-block;
   }
 
   .prompt {
@@ -192,7 +199,6 @@ const { prompt = "guest@portfolio:~$" } = Astro.props;
     font-family: var(--font-mono);
     font-size: inherit;
     outline: none;
-    flex: 1;
     padding: 0;
   }
 
@@ -202,12 +208,11 @@ const { prompt = "guest@portfolio:~$" } = Astro.props;
     color: var(--terminal-dim);
     pointer-events: none;
     white-space: pre;
-    padding-left: calc(100% - 1ch);
   }
 
   .cursor {
     position: absolute;
-    right: 0;
+    left: 0;
     width: 8px;
     height: 1em;
     background-color: var(--terminal-green);
@@ -224,62 +229,3 @@ const { prompt = "guest@portfolio:~$" } = Astro.props;
     }
   }
 </style>
-
-<!-- ---
-interface Props {
-  prompt?: string;
-}
-
-const { prompt } = Astro.props;
----
-
-<div class="command-input" id="commandInput">
-  <span class="prompt">{prompt}</span>
-  <input 
-    type="text" 
-    class="command-text" 
-    autocomplete="off" 
-    spellcheck="false"
-  />
-  <span class="cursor"></span>
-</div>
-
-<style>
-  .command-input {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 1rem;
-    position: relative;
-  }
-
-  .prompt {
-    color: var(--terminal-green);
-    opacity: 0.9;
-  }
-
-  .command-text {
-    background: transparent;
-    border: none;
-    color: var(--terminal-green);
-    font-family: inherit;
-    font-size: inherit;
-    outline: none;
-    flex: 1;
-    padding: 0;
-  }
-
-  .cursor {
-    position: absolute;
-    right: 0;
-    width: 8px;
-    height: 1em;
-    background-color: var(--terminal-green);
-    animation: blink var(--cursor-blink-speed) step-end infinite;
-  }
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
-</style> -->

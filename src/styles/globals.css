@@ -1,0 +1,69 @@
+
+
+:root {
+  --background: #181818;
+
+  /* Editor theme (Dracula) */
+  --editor-bg: #282a36;
+  --editor-fg: #f8f8f2;
+  --editor-line-numbers: #6272a4;
+  --editor-selection: #44475a;
+  --editor-cursor: #f8f8f2;
+  --editor-highlight: #44475a;
+
+  /* Preview theme */
+  --preview-bg: #282a36;
+  --preview-fg: #f8f8f2;
+  --preview-heading: #bd93f9;
+  --preview-link: #8be9fd;
+  --preview-code: #50fa7b;
+  --preview-quote: #6272a4;
+  --preview-border: #44475a;
+  --preview-dim: #6272a4;
+
+  /* Syntax highlighting */
+  --syntax-comment: #6272a4;
+  --syntax-string: #f1fa8c;
+  --syntax-keyword: #ff79c6;
+  --syntax-function: #50fa7b;
+  --syntax-number: #bd93f9;
+  --syntax-constant: #bd93f9;
+  --syntax-class: #8be9fd;
+  --syntax-variable: #f8f8f2;
+}
+
+/* Dark theme (Dracula) */
+/* :root.dark {
+    --cursor-color: #F8F8F2;
+    --selection-background: #44475A;
+    --background: #282A36;
+    --foreground: #F8F8F2;
+    --black: #21222C;
+    --blue: #BD93F9;
+    --cyan: #8BE9FD;
+    --green: #50FA7B;
+    --purple: #FF79C6;
+    --red: #FF5555;
+    --white: #F8F8F2;
+    --yellow: #F1FA8C;
+    --bright-black: #6272A4;
+    --bright-blue: #D6ACFF;
+    --bright-cyan: #A4FFFF;
+    --bright-green: #69FF94;
+    --bright-purple: #FF92DF;
+    --bright-red: #FF6E6E;
+    --bright-white: #FFFFFF;
+    --bright-yellow: #FFFFA5;
+} */
+/* Light theme overrides */
+:root.light {
+  --editor-bg: #ffffff;
+  --editor-fg: #24292e;
+  --editor-line-numbers: #999999;
+  --editor-selection: #c8c8fa;
+  --editor-cursor: #24292e;
+  --editor-highlight: #f6f8fa;
+}
+
+
+

@@ -1,0 +1,113 @@
+---
+import AsciiArt from "./AsciiArt.astro";
+import { getProfileInfo } from "../../utils/profile";
+
+interface Props {
+  PS1: string;
+}
+
+const { PS1 } = Astro.props;
+const profileFields = getProfileInfo();
+const separatorLength = PS1.length / 2 + 1;
+
+const terminalColors = [
+  "var(--terminal-green)",
+  "var(--terminal-dark)",
+  "var(--terminal-shadow)",
+  "var(--terminal-header)",
+  "var(--terminal-dim)",
+  "var(--terminal-bright)",
+  "var(--terminal-output)",
+];
+---
+
+<div class="neofetch-container">
+  <div class="ascii-logo">
+    <AsciiArt filepath="profile-outlined.txt" />
+  </div>
+
+  <div class="profile-info">
+    <div class="ps1">{PS1}</div>
+    <div class="separator">
+      {"- ".repeat(separatorLength)}
+    </div>
+
+    {
+      profileFields.map(({ label, value }) => (
+        <div class="profile-line">
+          <span class="profile-label">{label}:</span>
+          <span class="profile-value">{value}</span>
+        </div>
+      ))
+    }
+
+    <div class="color-row">
+      {
+        terminalColors.map((color) => (
+          <div class="color-block" style={`background-color: ${color}`} />
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<style>
+  .neofetch-container {
+    --spacing: 2rem;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing);
+    padding: 2rem;
+  }
+
+  .ascii-logo {
+    flex-shrink: 0;
+    min-width: 300px;
+    /* padding: var(--spacing); */
+  }
+
+  .profile-info {
+    /* padding-top: 1rem; */
+    align-self: center;
+  }
+
+  .ps1 {
+    color: var(--terminal-green);
+    font-weight: bold;
+  }
+
+  .separator {
+    color: var(--terminal-bright);
+  }
+
+  .profile-line {
+    margin-bottom: 0.5rem;
+  }
+
+  .profile-label {
+    color: var(--terminal-green);
+    font-weight: bold;
+  }
+
+  .profile-value {
+    color: var(--terminal-bright);
+    white-space: pre-wrap;
+    line-height: 1.5;
+  }
+
+  /* Color palette styles */
+  .color-row {
+    display: flex;
+    margin-top: 1rem;
+    justify-content: center;
+  }
+
+  .color-block {
+    --color-block-size: 2rem;
+
+    width: calc(var(--color-block-size) * 1.2);
+    height: 1.5rem;
+  }
+</style>

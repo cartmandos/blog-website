@@ -1,33 +1,35 @@
-// types/profile.ts
-export interface ProfileInfo {
-  name: string;
-  title: string;
-  location: string;
-  email: string;
-  languages: string[];
-  technologies: string[];
-  specialization: string[];
-  github?: string;
-  linkedin?: string;
-  website?: string;
+import type { ProfileInfo, ProfileField } from "../types/profile";
+
+// profile information
+const profileInfo = {
+  name: "Oren Damien Shomrai",
+  title: "Software Engineer",
+  location: "Israel",
+  email: "damien.shomrai@gmail.com",
+  languages: ["Node.js", "Python"],
+  technologies: ["Docker", "Kubernetes"],
+  specialization: ["Backend Development", "Infra"],
+  github: "github.com/cartmandos",
+  // linkedin: 'linkedin.com/in/damien-shomrai',
+  // website: 'damienshomrai.com',
+};
+
+export function formatProfileInfo(info: ProfileInfo): ProfileField[] {
+  const fields = [
+    { label: "User", value: info.name },
+    { label: "Title", value: info.title },
+    { label: "Location", value: info.location },
+    { label: "Email", value: info.email },
+    { label: "Languages", value: info.languages.join(", ") },
+    { label: "Tech Stack", value: info.technologies.join(", ") },
+    { label: "Focus", value: info.specialization.join(", ") },
+    ...(info.github ? [{ label: "GitHub", value: info.github }] : []),
+    ...(info.linkedin ? [{ label: "LinkedIn", value: info.linkedin }] : []),
+  ];
+
+  return fields;
 }
 
-export function formatProfileInfo(info: ProfileInfo): string[] {
-  const colorize = (text: string) => `<span class="info-label">${text}</span>`; // Green color for labels
-
-  return [
-    `${colorize("User")}: ${info.name}`,
-    `<span class="info-label">Title</span>: ${info.title}`,
-    `<span class="info-label">Location</span>: ${info.location}`,
-    `<span class="info-label">Email</span>: ${info.email}`,
-    `<span class="info-label">Languages</span>: ${info.languages.join(", ")}`,
-    `<span class="info-label">Tech Stack</span>: ${info.technologies.join(", ")}`,
-    `<span class="info-label">Focus</span>: ${info.specialization.join(", ")}`,
-    ...(info.github
-      ? [`<span class="info-label">GitHub</span>: ${info.github}`]
-      : []),
-    ...(info.linkedin
-      ? [`<span class="info-label">LinkedIn</span>: ${info.linkedin}`]
-      : []),
-  ];
+export function getProfileInfo(): ProfileField[] {
+  return formatProfileInfo(profileInfo);
 }

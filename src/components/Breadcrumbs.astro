@@ -53,7 +53,7 @@ const segments = getPathSegments(path);
     segments.map((segment, index) => (
       <>
         <a
-          href={segment.path}
+          href={segment.path || "#"}
           class="breadcrumb-item"
           aria-current={index === segments.length - 1 ? "page" : undefined}
         >
@@ -90,7 +90,8 @@ const segments = getPathSegments(path);
   }
 
   .breadcrumb-item:hover {
-    background-color: var(--vscode-hover-bg);
+    /* background-color: var(--vscode-hover-bg); */
+    color: white;
   }
 
   .breadcrumb-item i {

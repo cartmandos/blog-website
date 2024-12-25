@@ -2,10 +2,11 @@
 import CommandInput from "./CommandInput.astro";
 import TerminalOutput from "./TerminalOutput.astro";
 import ContainerMatrix from "../ContainerMatrix.astro";
-import AsciiArt from "./AsciiArt.astro";
+// import AsciiArt from "./AsciiArt.astro";
+import Neofetch from "./Neofetch.astro";
 import { getTimestamp } from "../../utils/time";
 import { fileSystem } from "../../utils/filesystem/commands";
-import { formatProfileInfo } from "../../utils/profile";
+// import { getProfileInfo } from "../../utils/profile";
 
 interface Props {
   initialOutput?: {
@@ -16,30 +17,7 @@ interface Props {
 
 const { initialOutput = [] } = Astro.props;
 const terminalId = "terminal-container";
-
-const title = "guest@portfolio";
-
-// Your profile information
-const profileInfo = {
-  name: "Oren Damien Shomrai",
-  title: "Software Engineer",
-  location: "Israel",
-  email: "damien.shomrai@gmail.com",
-  languages: ["Node.js", "Python"],
-  technologies: ["Docker", "Kubernetes"],
-  specialization: ["Backend Development", "Infra"],
-  github: "github.com/cartmandos",
-  // linkedin: 'linkedin.com/in/damien-shomrai',
-  // website: 'damienshomrai.com',
-};
-
-// Create neofetch-style initial output
-const neofetchOutput = {
-  command: "whoami",
-  output: formatProfileInfo(profileInfo),
-};
-
-const defaultOutput = [neofetchOutput, ...initialOutput];
+const PS1 = "guest@portfolio";
 ---
 
 <div class="terminal-window" id="terminal">
@@ -49,34 +27,18 @@ const defaultOutput = [neofetchOutput, ...initialOutput];
       <span class="control minimize"></span>
       <span class="control maximize"></span>
     </div>
-    <div class="title">guest@portfolio - Terminal</div>
+    <div class="terminal-title">
+      <span class="title">Terminal</span>
+      <span class="tab-title">{PS1}</span>
+    </div>
   </div>
 
   <div class="terminal-container" id={terminalId}>
     <ContainerMatrix containerId={terminalId} initialOpacity={0.2} />
 
     <div class="terminal-content">
-      <TerminalOutput
-        command={neofetchOutput.command}
-        output={[""]}
-        timestamp={getTimestamp()}
-      />
-      <div class="neofetch-container">
-        <div class="ascii-logo">
-          <AsciiArt filepath="profile-outlined.txt" />
-        </div>
-
-        <div class="system-info">
-          <div class="info-label" set:html={title} />
-          <div class="info-line" set:html={"- ".repeat(title.length / 2 + 1)} />
-          {
-            neofetchOutput.output.map((line) => (
-              <div class="info-line" set:html={line} />
-            ))
-          }
-        </div>
-      </div>
-
+      <!-- Neofetch-style terminal header -->
+      <Neofetch PS1={PS1} />
       {
         initialOutput.map((entry) => (
           <TerminalOutput
@@ -103,19 +65,21 @@ const defaultOutput = [neofetchOutput, ...initialOutput];
 <style>
   .terminal-window {
     background: var(--terminal-dark);
-    border: 1px solid var(--terminal-green);
-    box-shadow: 0 0 20px var(--terminal-shadow);
-    border-radius: 6px;
+    /* border: 1px solid #454545; */
+    /* border: 1px solid var(--terminal-green); */
+    /* box-shadow: 0 0 20px var(--terminal-shadow); */
+    /* border-radius: 6px; */
+    border-bottom: 1px solid #454545;
     overflow: hidden;
-    margin-bottom: 2rem;
+    /* margin-bottom: 2rem; */
   }
 
   .terminal-header {
-    background: var(--terminal-header);
+    /* background: var(--terminal-header); */
     padding: 0.5rem;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid var(--terminal-green);
+    border-bottom: 1px solid var(--terminal-dim);
     position: relative;
     z-index: 2;
   }
@@ -143,6 +107,13 @@ const defaultOutput = [neofetchOutput, ...initialOutput];
   }
 
   .title {
+    color: var(--terminal-bright);
+    font-size: 0.9em;
+    border-bottom: 1px solid green;
+    text-transform: uppercase;
+  }
+
+  .tab-title {
     color: var(--terminal-dim);
     font-size: 0.9em;
   }
@@ -151,6 +122,7 @@ const defaultOutput = [neofetchOutput, ...initialOutput];
     position: relative;
     min-height: 300px;
     max-height: 80vh;
+    cursor: text;
   }
 
   .terminal-content {
@@ -161,39 +133,5 @@ const defaultOutput = [neofetchOutput, ...initialOutput];
     max-height: 80vh;
     overflow-y: auto;
     background: transparent;
-  }
-
-  .neofetch-container {
-    display: flex;
-    gap: 2rem;
-    margin-bottom: 2rem;
-    padding: 1rem;
-  }
-
-  .ascii-logo {
-    flex-shrink: 0;
-    min-width: 300px;
-    /* change this margin usage  */
-
-    margin-right: 50px;
-  }
-
-  .system-info {
-    padding-top: 1rem;
-    align-self: center;
-  }
-
-  .info-line {
-    margin-bottom: 0.5rem;
-    white-space: pre-wrap;
-    line-height: 1.5;
-    color: var(--terminal-bright);
-  }
-
-  :global(.info-label) {
-    color: var(--terminal-green);
-
-    font-weight: bold;
-    display: inline-block;
   }
 </style>

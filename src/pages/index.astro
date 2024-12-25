@@ -1,7 +1,9 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Header from "../components/Header.astro";
-import Terminal from "../components/Terminal/Terminal.astro";
+import Header from "@/components/Header.astro"
+import Page from "@/components/Page/PageView.astro"
+import Terminal from "@/components/Terminal/Terminal.astro"
+import Layout from "@/layouts/Layout.astro"
+import '../styles/globals.css'
 
 const initialOutput = [
   {
@@ -12,20 +14,54 @@ const initialOutput = [
       "",
     ],
   },
-];
+]
+
+const pageContent = `# About Me
+
+Hello! I'm a software engineer with a passion for building great products.
+
+## Skills
+
+- TypeScript/JavaScript
+- React
+- Node.js
+- Python
+
+## Code Example
+
+\`\`\`typescript
+function greeting(name: string): string {
+  return \`Hello, \${name}!\`;
+}
+\`\`\`
+
+> I love working with modern web technologies and creating user-friendly experiences.
+
+# Projects
+
+- [Project 1](https://example.com)
+- [Project 2](https://example.com)
+- [Project 3](https://example.com)
+
+# Contact
+
+- LinkedIn: [linkedin.com/in/](https://linkedin.com/in/)`
 ---
 
 <Layout title="Terminal Portfolio">
   <Header pageName="Home" currentPath="/" />
   <main>
+    <Page content={pageContent} title="About Me" initialMode="preview" />
     <Terminal initialOutput={initialOutput} />
   </main>
 </Layout>
 
 <style>
   main {
-    max-width: 800px;
+    /* max-width: 800px; */
+    /* margin: 0 auto;
+    padding: 2rem; */
+    width: 100%;
     margin: 0 auto;
-    padding: 2rem;
   }
 </style>

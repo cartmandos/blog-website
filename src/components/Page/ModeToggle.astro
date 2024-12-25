@@ -1,0 +1,113 @@
+---
+interface Props {
+  pageId: string;
+  mode: "editor" | "preview";
+}
+
+const { mode } = Astro.props;
+---
+
+<div class="mode-toggle">
+  <!-- Editor Mode Button -->
+  <button
+    class="toggle-btn"
+    data-mode="editor"
+    aria-label="Switch to editor mode"
+    aria-pressed={mode === "editor"}
+  >
+    <i class="ph ph-code"></i>
+  </button>
+
+  <!-- Preview Mode Button -->
+  <button
+    class="toggle-btn"
+    data-mode="preview"
+    aria-label="Switch to preview mode"
+    aria-pressed={mode === "preview"}
+  >
+    <i class="ph ph-file-text"></i>
+  </button>
+</div>
+
+<script>
+  // import { pageStore } from "../../stores/pageStore";
+
+  function initializeToggle(element: Element) {
+    // const pageId = element
+    //   .closest(".page")
+    //   ?.getAttribute("data-page-id");
+    // if (!pageId) return;
+
+    const buttons = element.querySelectorAll(".toggle-btn");
+    // const mode = pageStore.getMode(pageId);
+
+    // Set initial button states
+    const mode = document.querySelector(".page-content")?.getAttribute("data-current-mode");
+    updateToggleState(buttons, mode);
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const newMode = btn.getAttribute("data-mode") as "editor" | "preview";
+        // pageStore.setMode(pageId, newMode);
+        // Dispatch mode change event
+        updateToggleState(buttons, newMode);
+
+        element.dispatchEvent(
+          new CustomEvent("modeChange", {
+            bubbles: true,
+            detail: { mode: newMode },
+          }),
+        );
+      });
+    });
+  }
+
+  function updateToggleState(buttons: NodeListOf<Element>, activeMode: string) {
+    buttons.forEach((btn) => {
+      btn.classList.toggle(
+        "active",
+        btn.getAttribute("data-mode") === activeMode,
+      );
+    });
+  }
+
+  // Initialize toggles
+  document.querySelectorAll(".mode-toggle").forEach(initializeToggle);
+</script>
+
+<style>
+  .mode-toggle {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.25rem 1rem;
+    /* background: var(--vscode-hover-bg); */
+    border-radius: 4px;
+  }
+
+  .toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--vscode-fg);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .toggle-btn:hover {
+    background: var(--vscode-active-bg);
+  }
+
+  .toggle-btn.active {
+    background: var(--vscode-active-bg);
+    color: var(--vscode-green);
+  }
+
+  .toggle-btn i {
+    font-size: 16px;
+  }
+</style>

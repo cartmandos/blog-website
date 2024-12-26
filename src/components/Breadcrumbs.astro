@@ -3,6 +3,13 @@ interface Props {
   path: string;
 }
 
+interface Segment {
+  label: string;
+  path?: string;
+  icon: string;
+}
+
+
 const { path } = Astro.props;
 
 // Convert URL path to breadcrumb segments
@@ -45,7 +52,7 @@ function getPathSegments(path: string) {
   });
 }
 
-const segments = getPathSegments(path);
+const segments: Segment[] = getPathSegments(path);
 ---
 
 <nav class="breadcrumbs" aria-label="breadcrumb">

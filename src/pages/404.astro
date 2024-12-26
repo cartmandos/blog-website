@@ -1,0 +1,20 @@
+---
+import Layout from "../layouts/Layout.astro"
+import Terminal from "../components/Terminal/Terminal.astro"
+
+const currentPath = Astro.url.pathname
+
+const initialOutput = [
+  {
+    command: `echo ${currentPath}`,
+    output: [
+      "404: Page not found",
+      "The page you are looking for does not exist.",
+    ],
+  },
+]
+---
+
+<Layout title="404">
+  <Terminal initialOutput={initialOutput} />
+</Layout>

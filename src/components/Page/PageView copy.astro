@@ -2,17 +2,12 @@
 import EditorMode from "./EditorMode.astro"
 import PreviewMode from "./PreviewMode.astro"
 import ModeToggle from "./ModeToggle.astro"
-// import type { PageProps } from "@/types"
+import type { PageProps } from "@/types"
 import Breadcrumbs from "../Breadcrumbs.astro"
 
-// interface Props extends PageProps {}
-interface PageProps {
-  slug: string
-  title?: string
-  initialMode?: "preview" | "editor"
-}
+interface Props extends PageProps {}
 
-const { slug, title = "Untitled", initialMode = "preview" } = Astro.props
+const { content, title = "Untitled", initialMode = "preview" } = Astro.props
 
 const currentPath = "home/about.md" // Astro.url.pathname
 const pageId = crypto.randomUUID()
@@ -38,16 +33,11 @@ const pageId = crypto.randomUUID()
   </div>
 
   <div class="page-content" data-current-mode={initialMode}>
-    <template id="preview-template">
-      <PreviewMode slug={slug} pageId={pageId} />
-    </template>
-
-
     <div class="preview-container" hidden={initialMode !== "preview"}>
-      <PreviewMode slug={slug} pageId={pageId} />
+      <PreviewMode content={content} pageId={pageId} />
     </div>
     <div class="editor-container" hidden={initialMode !== "editor"}>
-      <EditorMode content={slug} pageId={pageId} />
+      <EditorMode content={content} pageId={pageId} />
     </div>
   </div>
 </article>

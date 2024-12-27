@@ -11,6 +11,8 @@
       "@/types": ["src/types.d.ts"],
       "@/constants": ["src/consts.ts"],
     },
-    // "allowJs": true // required, and included with all Astro templates
+    "verbatimModuleSyntax": true, // enforce type imports
+    "strictNullChecks": true, // add if using `base` template
+    "allowJs": true // required, and included with all Astro templates
   }
 }

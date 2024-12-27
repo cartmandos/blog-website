@@ -1,13 +1,18 @@
 ---
+import { getEntry, render } from 'astro:content';
 import Prism from "prismjs";
 import "prismjs/components/prism-markdown";
 
 interface Props {
-  content: string;
+  id: string;
+  content?: string;
   pageId: string;
 }
 
-const { content, pageId } = Astro.props;
+// const { content, pageId } = Astro.props;
+const { id, pageId } = Astro.props;
+const post = await getEntry('blog', id);
+const content = post.body;
 
 const lines = content.split("\n");
 const highlightedContent = Prism.highlight(

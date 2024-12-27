@@ -114,3 +114,5 @@ export const menuItems: MenuItem[] = [
     ],
   },
 ];
+
+export const DEFAULT_BLOG_AUTHOR = "Oren Damien Shomrai";

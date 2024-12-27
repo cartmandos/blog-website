@@ -1,13 +1,7 @@
 ---
-import Page from "@/components/Page/PageView.astro"
 import Terminal from "@/components/Terminal/Terminal.astro"
 import Layout from "@/layouts/Layout.astro"
-import { DEFAULT_VIEW_MODE } from "@/constants"
-import * as aboutContent from '../content/about.md';
 
-// Get the raw content as string OR get the compiled HTML content
-const pageContent = aboutContent.rawContent();
-// const pageContent = await aboutContent.compiledContent();
 
 const initTerminalOutput = [
   {
@@ -22,9 +16,6 @@ const initTerminalOutput = [
 ---
 
 <Layout title="Terminal Portfolio">
-  <main>
-    <!-- <Page content={pageContent} title="About" initialMode={DEFAULT_VIEW_MODE} /> -->
     <Terminal initialOutput={initTerminalOutput} />
-  </main>
 </Layout>
 

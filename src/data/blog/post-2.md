@@ -1,7 +1,7 @@
 ---
 title: "Backpressure in Microservices"
-date: 2024-02-15
-author: "John Doe"
+publishedAt: 2024-02-15
+# author: "John Doe"
 description: "How to handle backpressure in microservices"
 tags: ["microservices", "architecture", "backpressure", "resilience"]
 ---

@@ -1,0 +1,31 @@
+---
+import PageView from "@/components/Page/PageView.astro"
+import Terminal from "@/components/Terminal/Terminal.astro"
+import Layout from "@/layouts/Layout.astro"
+import { DEFAULT_VIEW_MODE } from "@/constants"
+import * as aboutContent from '../data/about.md';
+
+// const about = import.meta.glob('src/data/about.md', { eager: true });
+
+// Get the raw content as string OR get the compiled HTML content
+const content = aboutContent.rawContent();
+// const content = await aboutContent.compiledContent();
+
+const initTerminalOutput = [
+  {
+    command: "echo 'Welcome to my portfolio!'",
+    output: [
+      "Welcome to my interactive terminal portfolio.",
+      "Type 'help' to see available commands.",
+      "",
+    ],
+  },
+]
+---
+
+<Layout title="About">
+    <Fragment set:html={content} />
+   <!-- <PageView content={pageContent} title="About" initialMode={DEFAULT_VIEW_MODE} /> -->
+    <Terminal initialOutput={initTerminalOutput} />
+</Layout>
+

@@ -1,0 +1,16 @@
+---
+import { ClientRouter } from "astro:transitions"
+import Head from "@/components/BaseHead.astro"
+
+const { title, ...props } = Astro.props
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <Head title={title} />
+    <ClientRouter />
+  </head>
+  <body><!-- --></body>
+</html>

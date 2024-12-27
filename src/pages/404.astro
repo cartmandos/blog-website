@@ -4,9 +4,9 @@ import Terminal from "../components/Terminal/Terminal.astro"
 
 const currentPath = Astro.url.pathname
 
-const initialOutput = [
+const TERMINAL_OUTPUT = [
   {
-    command: `echo ${currentPath}`,
+    command: `cd ${currentPath}`,
     output: [
       "404: Page not found",
       "The page you are looking for does not exist.",
@@ -16,5 +16,5 @@ const initialOutput = [
 ---
 
 <Layout title="404">
-  <Terminal initialOutput={initialOutput} />
+  <Terminal initialOutput={TERMINAL_OUTPUT} />
 </Layout>

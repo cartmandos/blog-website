@@ -1,34 +1,28 @@
 ---
 import { marked } from "marked"
 import { getCollection } from 'astro:content';
+import { getEntry, render } from 'astro:content';
 
 interface Props {
-  slug: string;  // Changed from content to slug
+  id: string;  // Changed from content to id
   // content: string
   pageId: string
 }
 
-const { slug, pageId } = Astro.props
+const { id, pageId } = Astro.props
 
-// Get the blog post
-const posts = await getCollection('blog');
-console.log(posts);
-const post = posts.find(post => post.slug === slug);
+// const post = await getEntry('blog', params.id);
+const post = await getEntry('blog', id);
+const { Content, headings } = await render(post);
 
-if (!post) {
-  throw new Error(`Blog post not found: ${slug}`);
-}
-
-// Render the content
-const { Content } = await post.render();
 ---
 
 <div class={`preview-mode`} data-page-id={pageId}>
   <div class="preview-content">
     <header class="post-header">
       <div class="post-meta">
-        <time datetime={post.data.date.toISOString()}>
-          {post.data.date.toLocaleDateString()}
+        <time datetime={post.data.publishedAt.toISOString()}>
+          {post.data.publishedAt.toLocaleDateString()}
         </time>
         <span class="post-author">{post.data.author}</span>
       </div>
@@ -41,9 +35,23 @@ const { Content } = await post.render();
           ))}
         </div>
       )}
+
+      <!-- Table of Content [headings: depth, slug, text] -->
+      {headings.length > 0 && (
+        <nav>
+          <h2>Table of Contents</h2>
+          <ul>
+            {headings.map(heading => (
+              <li>
+                <a href={`#${heading.slug}`}>{heading.text}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
     </header>
     
-    <div class="post-content">
+    <div class="post-content">   
       <Content />
     </div>
   </div>

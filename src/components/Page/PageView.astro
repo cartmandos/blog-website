@@ -7,12 +7,12 @@ import Breadcrumbs from "../Breadcrumbs.astro"
 
 // interface Props extends PageProps {}
 interface PageProps {
-  slug: string
+  id: string
   title?: string
   initialMode?: "preview" | "editor"
 }
 
-const { slug, title = "Untitled", initialMode = "preview" } = Astro.props
+const { id, title = "Untitled", initialMode = "preview" } = Astro.props
 
 const currentPath = "home/about.md" // Astro.url.pathname
 const pageId = crypto.randomUUID()
@@ -39,15 +39,18 @@ const pageId = crypto.randomUUID()
 
   <div class="page-content" data-current-mode={initialMode}>
     <template id="preview-template">
-      <PreviewMode slug={slug} pageId={pageId} />
+      <PreviewMode id={id} pageId={pageId} />
+    </template>
+    <template id="editor-template">
+      <EditorMode id={id}  pageId={pageId} />
     </template>
 
 
     <div class="preview-container" hidden={initialMode !== "preview"}>
-      <PreviewMode slug={slug} pageId={pageId} />
+      <PreviewMode id={id} pageId={pageId} />
     </div>
     <div class="editor-container" hidden={initialMode !== "editor"}>
-      <EditorMode content={slug} pageId={pageId} />
+      <EditorMode id={id}  pageId={pageId} />
     </div>
   </div>
 </article>

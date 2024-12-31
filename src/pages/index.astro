@@ -1,21 +1,21 @@
 ---
 import Terminal from "@/components/Terminal/Terminal.astro"
-import Layout from "@/layouts/Layout.astro"
+import MainLayout from "@/layouts/MainLayout.astro"
+import { INIT_OUTPUT} from "@/constants"
 
 
 const initTerminalOutput = [
   {
-    command: "echo 'Welcome to my portfolio!'",
+    command: "site init -y && cat welcome",
     output: [
-      "Welcome to my interactive terminal portfolio.",
-      "Type 'help' to see available commands.",
-      "",
+    INIT_OUTPUT.welcome,
+      INIT_OUTPUT.help,
     ],
   },
 ]
 ---
 
-<Layout title="Terminal Portfolio">
+<MainLayout title="Terminal Portfolio">
     <Terminal initialOutput={initTerminalOutput} />
-</Layout>
+</MainLayout>
 

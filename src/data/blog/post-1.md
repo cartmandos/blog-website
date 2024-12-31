@@ -1,11 +1,9 @@
 ---
 title: "Building Scalable Microservices"
 publishedAt: 2024-01-15
-# author: "John Doe"
 description: "Insights from building and deploying microservices at scale"
 tags: ["microservices", "architecture", "scaling"]
 ---
-
 ## Introduction
 
 I can link internally to [my conclusion](#conclusion) on the same page when writing Markdown.

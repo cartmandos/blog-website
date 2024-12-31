@@ -1,9 +1,14 @@
 ---
 import EditorMode from "./EditorMode.astro"
 import PreviewMode from "./PreviewMode.astro"
-import ModeToggle from "./ModeToggle.astro"
-import type { PageProps } from "@/types"
-import Breadcrumbs from "../Breadcrumbs.astro"
+import ModeToggle from "../ModeToggle.astro"
+import Breadcrumbs from "../../Breadcrumbs.astro"
+
+interface PageProps {
+  content: string;
+  title?: string;
+  initialMode?: 'preview' | 'editor';
+}
 
 interface Props extends PageProps {}
 
@@ -37,7 +42,7 @@ const pageId = crypto.randomUUID()
       <PreviewMode content={content} pageId={pageId} />
     </div>
     <div class="editor-container" hidden={initialMode !== "editor"}>
-      <EditorMode content={content} pageId={pageId} />
+      <EditorMode rawContent={content} pageId={pageId} />
     </div>
   </div>
 </article>

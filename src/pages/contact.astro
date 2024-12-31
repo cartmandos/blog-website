@@ -1,0 +1,21 @@
+---
+import PageView from "@/components/Page/PageView.astro"
+import Terminal from "@/components/Terminal/Terminal.astro"
+import MainLayout from "@/layouts/MainLayout.astro"
+
+const initTerminalOutput = [
+  {
+    command: "cd /contact",
+    output: [
+      "Feel free to reach out to me!",
+      "Type 'help' to see available commands.",
+      "",
+    ],
+  },
+]
+---
+
+<MainLayout title="About">
+  <PageView type="markdown" id="contact" title="Contact" />
+  <Terminal initialOutput={initTerminalOutput} />
+</MainLayout>

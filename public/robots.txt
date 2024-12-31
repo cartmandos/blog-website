@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://damienshomrai.com/sitemap-index.xml

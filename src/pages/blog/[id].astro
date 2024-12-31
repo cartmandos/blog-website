@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content"
-import Layout from "@/layouts/Layout.astro"
+import MainLayout from "@/layouts/MainLayout.astro"
 import PageView from "@/components/Page/PageView.astro"
 
 export async function getStaticPaths() {
@@ -12,9 +12,10 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props
+const { id } = Astro.params
 ---
 
-<Layout title={post.data.title}>
-  <PageView id={post.id} title={post.data.title} />
+<MainLayout title={post.data.title}>
+  <PageView id={id} title={post.data.title} />
   <!-- <PageView params={params} title={post.data.title} /> -->
-</Layout>
+</MainLayout>

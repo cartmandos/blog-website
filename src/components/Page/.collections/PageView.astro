@@ -1,58 +1,28 @@
 ---
-import { getEntry, render } from "astro:content"
+import { getEntry } from 'astro:content';
 import EditorMode from "./EditorMode.astro"
 import PreviewMode from "./PreviewMode.astro"
 import ModeToggle from "./ModeToggle.astro"
 import Breadcrumbs from "../Breadcrumbs.astro"
 import type { ViewMode } from "@/types"
-import { DEFAULT_VIEW_MODE } from "@/constants"
 
+// interface Props extends PageProps {}
 interface PageProps {
   id: string
-  type?: "blog" | "markdown"
   title?: string
-  content?: string
   initialMode?: ViewMode
 }
 
 interface Props extends PageProps {}
 
-const {
-  id,
-  title = id,
-  type = "blog",
-  initialMode = DEFAULT_VIEW_MODE,
-} = Astro.props
+const { id, title = "Untitled", initialMode = "preview" } = Astro.props
 
-const getRenderedContent = async () => {
-  if (type === "blog") {
-    const post = await getEntry("blog", id)
-    if (!post) {
-      throw new Error(`No post found for id: ${id}`)
-    }
 
-    const { Content, headings } = await render(post)
-    return { Content, headings, metadata: post.data, rawContent: post.body }
-  } else {
-    const { Content, getHeadings, rawContent } = await import(
-      `../../data/${id}.md`
-    )
-    return {
-      Content,
-      headings: getHeadings(),
-      metadata: null,
-      rawContent: rawContent(),
-    }
-  }
-}
-
-const { Content, headings, metadata, rawContent } = await getRenderedContent()
-
-const currentPath = "/home" + Astro.url.pathname
-// const pageId = crypto.randomUUID()
+const currentPath = "home/about.md" // Astro.url.pathname
+const pageId = crypto.randomUUID()
 ---
 
-<article class="page" data-page-id={id}>
+<article class="page" data-page-id={pageId}>
   <div class="page-header">
     <!-- <h1 class="page-title">{title}</h1> -->
     <div class="tab-container">
@@ -63,7 +33,7 @@ const currentPath = "/home" + Astro.url.pathname
         </button>
       </div>
     </div>
-    <ModeToggle pageId={id} mode={initialMode} />
+    <ModeToggle pageId={pageId} mode={initialMode} />
   </div>
 
   <!-- Breadcrumbs -->
@@ -73,17 +43,18 @@ const currentPath = "/home" + Astro.url.pathname
 
   <div class="page-content" data-current-mode={initialMode}>
     <template id="preview-template">
-      <PreviewMode pageId={id} />
+      <PreviewMode id={id} pageId={pageId} />
     </template>
     <template id="editor-template">
-      <EditorMode rawContent={rawContent} pageId={id} />
+      <EditorMode id={id}  pageId={pageId} />
     </template>
 
+
     <div class="preview-container" hidden={initialMode !== "preview"}>
-      <PreviewMode pageId={id}><Content /></PreviewMode>
+      <PreviewMode id={id} pageId={pageId} />
     </div>
     <div class="editor-container" hidden={initialMode !== "editor"}>
-      <EditorMode rawContent={rawContent} pageId={id} />
+      <EditorMode id={id}  pageId={pageId} />
     </div>
   </div>
 </article>

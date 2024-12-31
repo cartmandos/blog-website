@@ -116,3 +116,8 @@ export const menuItems: MenuItem[] = [
 ];
 
 export const DEFAULT_BLOG_AUTHOR = "Oren Damien Shomrai";
+
+export const INIT_OUTPUT = {
+  'welcome': "Welcome to my interactive terminal portfolio.",
+  'help': "Type 'help' to see available commands.",
+}

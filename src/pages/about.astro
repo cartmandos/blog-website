@@ -1,15 +1,12 @@
 ---
 import PageView from "@/components/Page/PageView.astro"
 import Terminal from "@/components/Terminal/Terminal.astro"
-import Layout from "@/layouts/Layout.astro"
-import { DEFAULT_VIEW_MODE } from "@/constants"
-import * as aboutContent from '../data/about.md';
+import MainLayout from "@/layouts/MainLayout.astro"
+// import * as aboutContent from '../data/about.md';
 
-// const about = import.meta.glob('src/data/about.md', { eager: true });
 
-// Get the raw content as string OR get the compiled HTML content
-const content = aboutContent.rawContent();
-// const content = await aboutContent.compiledContent();
+// Get the raw content as string 
+// const content = aboutContent.rawContent();
 
 const initTerminalOutput = [
   {
@@ -23,9 +20,8 @@ const initTerminalOutput = [
 ]
 ---
 
-<Layout title="About">
-    <Fragment set:html={content} />
-   <!-- <PageView content={pageContent} title="About" initialMode={DEFAULT_VIEW_MODE} /> -->
+<MainLayout title="About">
+   <PageView type="markdown" id="about" title="About"/>
     <Terminal initialOutput={initTerminalOutput} />
-</Layout>
+</MainLayout>
 

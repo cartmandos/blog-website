@@ -1,7 +1,7 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Header from "../components/Header.astro";
-import Terminal from "../components/Terminal/Terminal.astro";
+import MainLayout from "@/layouts/MainLayout.astro";
+import Header from "@/components/Header.astro";
+import Terminal from "@/components/Terminal/Terminal.astro";
 import { blogSystem } from "../utils/blog/blog";
 
 const initialOutput = [
@@ -25,10 +25,10 @@ const initialOutput = [
 ];
 ---
 
-<Layout title="Blog - Terminal Portfolio">
+<MainLayout title="Blog - Terminal Portfolio">
   <Header pageName="Blog" currentPath="/blog" />
     <Terminal initialOutput={initialOutput} />
-</Layout>
+</MainLayout>
 
 
 <script>

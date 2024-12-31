@@ -8,86 +8,19 @@ interface Props {
 
 const { content, pageId } = Astro.props
 
-// Configure marked options
-marked.setOptions({
+// Initial server-side markdown processing
+const rawHtmlContent = marked.parse(content, {
   gfm: true,
   breaks: true,
+  async: true,
 })
-
-// Initial server-side markdown processing
-const rawHtmlContent = marked.parse(content, { async: true })
 ---
 
-<div class={`preview-mode`} data-page-id={pageId}>
-  <div class="preview-content" data-raw-content={await rawHtmlContent}>
-    <!-- <Fragment set:html={rawHtmlContent} /> -->
+<div class="preview-mode" data-page-id={pageId}>
+  <div class="preview-content">
+    <Fragment set:html={rawHtmlContent} />
   </div>
 </div>
-
-<script>
-  import DOMPurify from "dompurify"
-
-  function initializePreview() {
-    const previewContents = document.querySelectorAll(".preview-content")
-
-    const santizeCfg = {
-      USE_PROFILES: { html: true },
-      ALLOWED_TAGS: [
-        "h1",
-        "h2",
-        "h3",
-        "h4",
-        "h5",
-        "h6",
-        "p",
-        "a",
-        "img",
-        "ul",
-        "ol",
-        "li",
-        "blockquote",
-        "code",
-        "pre",
-        "hr",
-        "table",
-        "thead",
-        "tbody",
-        "tr",
-        "th",
-        "td",
-        "strong",
-        "em",
-        "del",
-        "br",
-      ],
-      ALLOWED_ATTR: [
-        "href",
-        "src",
-        "alt",
-        "title",
-        "class",
-        "id",
-        "name",
-        "target",
-        "rel",
-      ],
-    }
-
-    previewContents.forEach((container) => {
-      const rawContent = container.getAttribute("data-raw-content")
-      if (rawContent) {
-        // Sanitize and insert content
-        const sanitizedContent = DOMPurify.sanitize(rawContent, santizeCfg)
-
-        container.innerHTML = sanitizedContent
-        container.removeAttribute("data-raw-content")
-      }
-    })
-  }
-
-  // Initialize on page load and navigation
-  document.addEventListener("astro:page-load", initializePreview)
-</script>
 
 <style>
   .preview-mode {

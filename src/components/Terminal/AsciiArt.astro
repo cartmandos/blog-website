@@ -15,7 +15,9 @@ const { content, filepath = "ascii-art.txt" } = Astro.props;
 ---
 
 <pre class="ascii-art" aria-label="ASCII art">
-  <Fragment>{loadAsciiArt(filepath)}</Fragment>
+  <!-- <Fragment set:text={loadAsciiArt(filepath)}></Fragment> -->
+     <Fragment>{loadAsciiArt(filepath)}</Fragment>
+
   
   </pre>
 

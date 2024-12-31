@@ -1,6 +1,6 @@
 ---
-import Layout from "../layouts/Layout.astro"
-import Terminal from "../components/Terminal/Terminal.astro"
+import MainLayout from "@/layouts/MainLayout.astro"
+import Terminal from "@/components/Terminal/Terminal.astro"
 
 const currentPath = Astro.url.pathname
 
@@ -15,6 +15,6 @@ const TERMINAL_OUTPUT = [
 ]
 ---
 
-<Layout title="404">
+<MainLayout title="404">
   <Terminal initialOutput={TERMINAL_OUTPUT} />
-</Layout>
+</MainLayout>

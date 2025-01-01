@@ -1,8 +1,8 @@
 ---
-import MainLayout from "@/layouts/MainLayout.astro";
-import Header from "@/components/Header.astro";
-import Terminal from "@/components/Terminal/Terminal.astro";
-import { blogSystem } from "../utils/blog/blog";
+import MainLayout from "@/layouts/MainLayout.astro"
+import Header from "@/components/Header.astro"
+import Terminal from "@/components/Terminal/Terminal.astro"
+import { blogSystem } from "../utils/blog/blog"
 
 const initialOutput = [
   {
@@ -22,89 +22,45 @@ const initialOutput = [
     command: "ls -l",
     output: blogSystem.ls(["-l"]),
   },
-];
+]
 ---
 
 <MainLayout title="Blog - Terminal Portfolio">
   <Header pageName="Blog" currentPath="/blog" />
-    <Terminal initialOutput={initialOutput} />
+  <Terminal initialOutput={initialOutput} />
 </MainLayout>
 
-
 <script>
-  import { blogSystem } from "../utils/blog/blog";
+  import { blogSystem } from "../utils/blog/blog"
 
   // Add blog-specific commands to the command system
-  const existingExecuteCommand = window.executeCommand;
+  const existingExecuteCommand = window.executeCommand
 
   window.executeCommand = (cmd: string): string[] => {
-    const [command, ...args] = cmd.trim().split(/\s+/);
+    const [command, ...args] = cmd.trim().split(/\s+/)
 
     switch (command) {
       case "cat":
         return args.length
           ? blogSystem.cat(args[0])
-          : ["Usage: cat <post-slug>"];
+          : ["Usage: cat <post-slug>"]
 
       case "log":
         return args.length
           ? blogSystem.log(args[0])
-          : ["Usage: log <post-slug>"];
+          : ["Usage: log <post-slug>"]
 
       case "diff":
         return args.length >= 2
           ? blogSystem.diff(args[0], args[1])
-          : ["Usage: diff <post-slug> <commit-hash>"];
+          : ["Usage: diff <post-slug> <commit-hash>"]
 
       case "top":
-        const count = args.length ? parseInt(args[0]) : 5;
-        return blogSystem.top(count);
+        const count = args.length ? parseInt(args[0]) : 5
+        return blogSystem.top(count)
 
       default:
-        return existingExecuteCommand(cmd);
+        return existingExecuteCommand(cmd)
     }
-  };
+  }
 </script>
-
-<!-- ---
-import Layout from '../layouts/Layout.astro';
-import Terminal from '../components/Terminal.astro';
-
-const posts = [
-	{
-		title: "Building Scalable Microservices",
-		date: "2024-01-15",
-		excerpt: "Insights from building and deploying microservices at scale..."
-	},
-	{
-		title: "The Future of Web Development",
-		date: "2023-12-20",
-		excerpt: "Exploring upcoming trends and technologies in web development..."
-	}
-];
-
-const blogList = posts.map(post => 
-	`${post.date} - ${post.title}\n${post.excerpt}`
-).join("\n\n");
----
-
-<Layout title="Blog - Terminal Portfolio">
-	<main>
-		<Terminal
-			command="ls -l /blog"
-			output={blogList}
-		/>
-		
-		<div class="command-input">
-			<span class="prompt">guest@portfolio:/blog$</span>
-			<span class="cursor"></span>
-		</div>
-	</main>
-</Layout>
-
-<style>
-	main {
-		max-width: 800px;
-		margin: 0 auto;
-	}
-</style> -->

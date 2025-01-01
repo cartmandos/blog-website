@@ -2,11 +2,6 @@
 import PageView from "@/components/Page/PageView.astro"
 import Terminal from "@/components/Terminal/Terminal.astro"
 import MainLayout from "@/layouts/MainLayout.astro"
-// import * as aboutContent from '../data/about.md';
-
-
-// Get the raw content as string 
-// const content = aboutContent.rawContent();
 
 const initTerminalOutput = [
   {
@@ -21,7 +16,6 @@ const initTerminalOutput = [
 ---
 
 <MainLayout title="About">
-   <PageView type="markdown" id="about" title="About"/>
-    <Terminal initialOutput={initTerminalOutput} />
+  <PageView type="markdown" id="about" title="About" />
+  <Terminal initialOutput={initTerminalOutput} />
 </MainLayout>
-

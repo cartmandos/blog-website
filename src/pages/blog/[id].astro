@@ -16,6 +16,5 @@ const { id } = Astro.params
 ---
 
 <MainLayout title={post.data.title}>
-  <PageView id={id} title={post.data.title} />
-  <!-- <PageView params={params} title={post.data.title} /> -->
+  <PageView id={id} title={post.data.title} type="collection" />
 </MainLayout>

@@ -1,53 +1,51 @@
 ---
-import { render } from "astro:content"
+import type { MarkdownHeading } from "astro"
 import type { CollectionEntry } from "astro:content"
 
-interface Props {
-  pageId: string // Changed from content to id
-  post?: CollectionEntry<"blog">
+interface BasePostProps {
+  pageId: string
+  type: "collection" | "markdown"
 }
 
-const { post, pageId } = Astro.props
+interface BlogPostProps extends BasePostProps {
+  metadata?: CollectionEntry<"blog">["data"]
+  headings?: MarkdownHeading[]
+}
+
+type PostProps = BasePostProps | BlogPostProps
 
 
-// const getRenderedContent = async () => {
-//   if (!!post) {
-//     const { Content, headings } = await render(post)
-//     return { Content, headings, metadata: post.data }
-//   } else {
-//     const { Content, getHeadings } = await import(`../../data/${pageId}.md`)
-//     return { Content, headings: getHeadings(), metadata: null }
-//   }
-// }
-
-// const { Content, headings, metadata } = await getRenderedContent()
+const { type, pageId } = Astro.props as PostProps
+let metadata, headings
+if (type === "collection") {
+  metadata = (Astro.props as BlogPostProps).metadata
+  headings = (Astro.props as BlogPostProps).headings
+}
 ---
 
 <div class="preview-mode" data-page-id={pageId}>
   <div class="preview-content">
-    <!-- {
-      metadata && (
+   
+    {(metadata && headings) ? (
         <header class="post-header">
+          {(Object.keys(metadata).length) && (
           <div class="post-meta">
-            <time datetime={post.data.publishedAt.toISOString()}>
-              {post.data.publishedAt.toLocaleDateString()}
+            <time datetime={metadata.publishedAt.toISOString()}>
+              {metadata.publishedAt.toLocaleDateString()}
             </time>
-            <span class="post-author">{post.data.author}</span>
+            <span class="post-author">{metadata.author}</span>
           </div>
-          <h1>{post.data.title}</h1>
-          {post.data.description && (
-            <p class="post-description">{post.data.description}</p>
-          )}
-          {post.data.tags.length > 0 && (
-            <div class="post-tags">
-              {post.data.tags.map((tag) => (
+          <h1>{metadata.title}</h1>
+          <p class="post-description">{metadata.description}</p>
+          <div class="post-tags">
+            {metadata.tags.map((tag: string) => (
                 <span class="tag">{tag}</span>
               ))}
-            </div>
+          </div>
           )}
 
-          {headings.length && (
-            <nav>
+          {(headings.length) && (
+            <nav class="toc">
               <h2>Table of Contents</h2>
               <ul>
                 {headings.map((heading) => (
@@ -58,15 +56,15 @@ const { post, pageId } = Astro.props
               </ul>
             </nav>
           )}
-        </header>
-      )
-    } -->
+        </header>) : null}
+
 
     <div class="post-content">
-      <!-- <Content /> -->
+      <!-- Content -->
       <slot />
     </div>
   </div>
+</div>
 
   <style>
     .preview-mode {
@@ -79,6 +77,34 @@ const { post, pageId } = Astro.props
       margin: 0 auto;
     }
 
+    .toc {
+      margin: 1.5rem 0;
+      padding: 1rem;
+      background: var(--vscode-hover-bg);
+      border-radius: 4px;
+    }
+
+    .toc h2 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      color: var(--vscode-fg);
+    }
+
+    .toc ul {
+      list-style: none;
+      padding-left: 1rem;
+      margin: 0.5rem 0;
+    }
+
+    .toc a {
+      color: var(--vscode-fg);
+      text-decoration: none;
+      opacity: 0.8;
+    }
+
+    .toc a:hover {
+      opacity: 1;
+    }
     /* Markdown styling */
     .preview-content :global(h1),
     .preview-content :global(h2),
@@ -225,4 +251,3 @@ const { post, pageId } = Astro.props
       color: var(--vscode-fg);
     }
   </style>
-</div>

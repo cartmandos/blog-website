@@ -2,7 +2,8 @@ export async function loadAsciiArt(filepath: string): Promise<string> {
   try {
     // Using dynamic filepath with type safety
     const modules = import.meta.glob<string>("/public/ascii/**/*.txt", {
-      as: "raw",
+      query: '?raw',
+      import: 'default',
       eager: true,
     });
 

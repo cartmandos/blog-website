@@ -3,12 +3,10 @@ import Prism from "prismjs"
 import "prismjs/components/prism-markdown"
 
 interface Props {
-  pageId: string // Changed from content to id
+  pageId: string
   rawContent: string
 }
 
-
-// const { content, pageId } = Astro.props;
 const { pageId, rawContent } = Astro.props
 
 const lines = rawContent.split("\n")
@@ -94,5 +92,4 @@ const highlightedContent = Prism.highlight(
   .editor-content :global(.token.blockquote) {
     color: #6272a4;
   }
-
 </style>

@@ -1,54 +1,130 @@
-# Astro Starter Kit: Basics
+# Terminal-Style Portfolio Website
 
-```sh
-npm create astro@latest -- --template basics
+A modern, interactive portfolio website built with Astro v5, featuring a terminal-like interface and IDE-inspired design. The site combines static site generation for optimal performance with interactive components for an engaging user experience.
+
+## Features
+
+- 🖥️ Terminal emulator with working commands and file system
+- 💻 IDE-inspired UI with working sidebar, tabs, and themes
+- 📝 Blog system with Markdown/MDX support
+- 🎨 Light/Dark theme support
+- ⚡ Optimal performance through static generation
+- 🔍 Full content search capabilities
+- 📱 Responsive design
+
+## Tech Stack
+
+- [Astro](https://astro.build/) v5 - Static Site Generator
+- TypeScript - Type-safe development
+- Content Collections - Content management
+- Islands Architecture - Component hydration
+
+## Project Structure
+
+```
+src/
+├── components/     # Reusable UI components
+│   ├── Terminal/  # Terminal-related components
+│   ├── Page/      # Page view components
+│   └── ui/        # Common UI elements
+├── content/       # Content collections
+├── layouts/       # Page layouts
+├── pages/         # Route pages
+├── styles/        # Global styles
+├── utils/         # Shared utilities
+└── types/         # TypeScript type definitions
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+## Getting Started
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+### Prerequisites
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+- Node.js >= 22.11.0
+- pnpm (recommended) or npm
 
-## 🚀 Project Structure
+### Installation
 
-Inside of your Astro project, you'll see the following folders and files:
+1. Clone the repository
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── components/
-│   │   └── Card.astro
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
+```bash
+git clone https://github.com/username/terminal-portfolio.git
+cd terminal-portfolio
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+2. Install dependencies
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+```bash
+pnpm install
+```
 
-Any static assets, like images, can be placed in the `public/` directory.
+3. Start development server
 
-## 🧞 Commands
+```bash
+pnpm dev
+```
 
-All commands are run from the root of the project, from a terminal:
+The site will be available at `http://localhost:4321`
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+### Build
 
-## 👀 Want to learn more?
+To build for production:
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+```bash
+pnpm build
+```
+
+To preview the production build:
+
+```bash
+pnpm preview
+```
+
+## Terminal Commands
+
+The terminal interface supports several Unix-like commands:
+
+- `help` - Display available commands
+- `ls` - List directory contents
+- `cd` - Change directory
+- `cat` - Display file contents
+- `clear` - Clear terminal screen
+- And more...
+
+## Development
+
+### Key Principles
+
+- TypeScript-first development with strict type checking
+- Component-based architecture using Astro components
+- Static-first approach for optimal performance
+- Clean, maintainable code with clear separation of concerns
+- Islands architecture for selective hydration
+
+### Adding New Terminal Commands
+
+To add new commands, extend the `CommandSystem` class in `src/utils/filesystem/commands.ts`:
+
+```typescript
+export function executeCommand(cmd: string): string[] {
+  const [command, ...args] = cmd.trim().split(/\s+/)
+
+  switch (command) {
+    case "your-command":
+      return handleYourCommand(args)
+    // ...
+  }
+}
+```
+
+### Content Management
+
+Content is managed through Astro's Content Collections API. To add new content:
+
+1. Create your content in `src/data/` using Markdown or MDX
+2. Update the collection schema in `src/content.config.ts` if needed
+3. Query content using the Content Collections API:
+
+```typescript
+import { getCollection } from "astro:content"
+const posts = await getCollection("blog")
+```

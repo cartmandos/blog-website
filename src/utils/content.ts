@@ -1,5 +1,5 @@
 import type { MarkdownHeading } from "astro"
-import { getEntry, render, type CollectionEntry } from "astro:content"
+import { getEntry, render } from "astro:content"
 import path from "node:path"
 
 interface ModuleContent {
@@ -19,7 +19,7 @@ export interface RenderedContent {
 
 const MARKDOWN_FILE_DIR = "/src/data"
 
-// Use Vite's import.meta.glob to dynamically import all markdown files
+// dynamically import all markdown files
 const modules = import.meta.glob<ModuleContent>(`/src/data/**/*.md`, {
   eager: true,
 })

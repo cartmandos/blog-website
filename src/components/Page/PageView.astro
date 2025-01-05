@@ -3,11 +3,13 @@ import EditorMode from "./EditorMode.astro"
 import PreviewMode from "./PreviewMode.astro"
 import ModeToggle from "./ModeToggle.astro"
 import Breadcrumbs from "../Breadcrumbs.astro"
+import {
+  loadDynamicContent,
+  loadCollectionContent,
+  type RenderedContent,
+} from "src/utils/content"
 import type { ViewMode } from "@/types"
 import { DEFAULT_VIEW_MODE } from "@/constants"
-import {loadDynamicContent,loadCollectionContent, type RenderedContent} from "src/utils/content"
-
-export type ContentType = "blog" | "markdown"
 
 interface BasePageProps {
   id: string
@@ -33,15 +35,12 @@ const {
   initialMode = DEFAULT_VIEW_MODE,
 } = Astro.props as PageProps
 
-
-
 const getRenderedContent = async (): Promise<RenderedContent> => {
-    if (type === "markdown") {
-      return await loadDynamicContent(id)
-    } else { 
-      return await loadCollectionContent("blog", id)
-
-    }
+  if (type === "markdown") {
+    return await loadDynamicContent(id)
+  } else {
+    return await loadCollectionContent("blog", id)
+  }
 }
 
 const content = await getRenderedContent()
@@ -72,7 +71,12 @@ const currentPath = "/home" + Astro.url.pathname
   <!-- Content Section -->
   <div class="page-content" data-current-mode={initialMode}>
     <div class="preview-container" hidden={initialMode !== "preview"}>
-      <PreviewMode pageId={id} metadata={metadata} headings={headings} type={type}>
+      <PreviewMode 
+        pageId={id}
+        type={type}
+        metadata={metadata}
+        headings={headings}
+      >
         <Content />
       </PreviewMode>
     </div>
@@ -174,7 +178,6 @@ const currentPath = "/home" + Astro.url.pathname
     border-bottom: 2px solid var(--vscode-bg);
     margin-bottom: -1px;
   }
-
 
   .close-button {
     /* display: flex; */

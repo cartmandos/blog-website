@@ -3,19 +3,32 @@ import type { MarkdownHeading } from "astro"
 import type { CollectionEntry } from "astro:content"
 
 interface BasePostProps {
-  pageId: string
-  type: "collection" | "markdown"
+  pageId: string;
+  type: "collection" | "markdown";
+  headings?: MarkdownHeading[];
+  metadata?: Record<string, unknown>;
 }
 
 interface BlogPostProps extends BasePostProps {
-  metadata?: CollectionEntry<"blog">["data"]
-  headings?: MarkdownHeading[]
+  type: "collection";
+  metadata: CollectionEntry<"blog">["data"];
+  headings: MarkdownHeading[];
 }
 
-type PostProps = BasePostProps | BlogPostProps
+interface MarkdownPostProps extends BasePostProps {
+  type: "markdown";
+}
 
+type Props = BlogPostProps | MarkdownPostProps;
 
-const { type, pageId } = Astro.props as PostProps
+const props = Astro.props as Props
+const { type, pageId } = props
+
+// Type guard for blog posts
+const isBlogPost = (props: Props): props is BlogPostProps => {
+  return props.type === "collection";
+};
+
 let metadata, headings
 if (type === "collection") {
   metadata = (Astro.props as BlogPostProps).metadata
@@ -26,38 +39,47 @@ if (type === "collection") {
 <div class="preview-mode" data-page-id={pageId}>
   <div class="preview-content">
    
-    {(metadata && headings) ? (
-        <header class="post-header">
-          {(Object.keys(metadata).length) && (
-          <div class="post-meta">
-            <time datetime={metadata.publishedAt.toISOString()}>
-              {metadata.publishedAt.toLocaleDateString()}
+    {isBlogPost(props) && (
+      <header class="post-header">
+        <div class="post-meta">
+          {props.metadata.publishedAt && (
+            <time datetime={props.metadata.publishedAt.toISOString()}>
+              {props.metadata.publishedAt.toLocaleDateString()}
             </time>
-            <span class="post-author">{metadata.author}</span>
-          </div>
-          <h1>{metadata.title}</h1>
-          <p class="post-description">{metadata.description}</p>
+          )}
+          {props.metadata.author && (
+            <span class="post-author">{props.metadata.author}</span>
+          )}
+        </div>
+        
+        <h1>{props.metadata.title}</h1>
+        
+        {props.metadata.description && (
+          <p class="post-description">{props.metadata.description}</p>
+        )}
+        
+        {props.metadata.tags?.length > 0 && (
           <div class="post-tags">
-            {metadata.tags.map((tag: string) => (
-                <span class="tag">{tag}</span>
-              ))}
+            {props.metadata.tags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
           </div>
-          )}
+        )}
 
-          {(headings.length) && (
-            <nav class="toc">
-              <h2>Table of Contents</h2>
-              <ul>
-                {headings.map((heading) => (
-                  <li>
-                    <a href={`#${heading.slug}`}>{heading.text}</a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          )}
-        </header>) : null}
-
+        {props.headings.length > 0 && (
+          <nav class="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+              {props.headings.map((heading) => (
+                <li class={`depth-${heading.depth}`}>
+                  <a href={`#${heading.slug}`}>{heading.text}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+      </header>
+    )}
 
     <div class="post-content">
       <!-- Content -->

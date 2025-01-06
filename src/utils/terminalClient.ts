@@ -3,8 +3,8 @@ import {
   getCompletions,
   executeCommand,
   fileSystem,
-} from "../../utils/filesystem";
-import { getTimestamp } from "../../utils/time";
+} from "./filesystem";
+import { getTimestamp } from "./time";
 
 export function initializeTerminal() {
   const history = new CommandHistory();
@@ -67,8 +67,13 @@ export function initializeTerminal() {
     }
   }
 
+
   function appendOutput(command: string, output: string[]) {
     const content = terminal?.querySelector(".terminal-content");
+    const commandInput = terminal?.querySelector(".command-input");
+    
+    if (!content || !commandInput) return;
+  
     const template = document.createElement("template");
     template.innerHTML = `
       <div class="terminal-output">
@@ -82,8 +87,12 @@ export function initializeTerminal() {
         </div>
       </div>
     `;
-    content?.insertBefore(template.content, input.parentElement);
-    input.scrollIntoView({ behavior: "smooth" });
+  
+    // Insert before the command input container
+    content.insertBefore(template.content, commandInput);
+  
+    // Ensure the input is visible
+    commandInput.scrollIntoView({ behavior: "smooth" });
   }
 
   function updatePrompt() {
@@ -99,3 +108,27 @@ export function initializeTerminal() {
     outputs?.forEach((output) => output.remove());
   }
 }
+
+
+
+
+///
+
+  // function appendOutput(command: string, output: string[]) {
+  //   const content = terminal?.querySelector(".terminal-content");
+  //   const template = document.createElement("template");
+  //   template.innerHTML = `
+  //     <div class="terminal-output">
+  //       <div class="command-line">
+  //         <span class="timestamp">[${getTimestamp()}]</span>
+  //         <span class="prompt">${fileSystem.getPrompt()}</span>
+  //         <span class="command">${command}</span>
+  //       </div>
+  //       <div class="output">
+  //         ${output.map((line) => `<p>${line}</p>`).join("")}
+  //       </div>
+  //     </div>
+  //   `;
+  //   content?.insertBefore(template.content, input.parentElement);
+  //   input.scrollIntoView({ behavior: "smooth" });
+  // }

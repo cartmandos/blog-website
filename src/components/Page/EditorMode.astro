@@ -1,6 +1,5 @@
 ---
-import Prism from "prismjs"
-import "prismjs/components/prism-markdown"
+import { Prism } from "@astrojs/prism"
 
 interface Props {
   pageId: string
@@ -9,22 +8,24 @@ interface Props {
 
 const { pageId, rawContent } = Astro.props
 
-const lines = rawContent.split("\n")
-const highlightedContent = Prism.highlight(
-  rawContent,
-  Prism.languages.markdown,
-  "markdown",
-)
+function generateLineNumbers(content: string): number[] {
+  return Array.from(
+    { length: content.split("\n").length },
+    (_, index) => index + 1,
+  )
+}
+
+const lineNumbers = generateLineNumbers(rawContent)
 ---
 
-<div class={`editor-mode`} data-page-id={pageId}>
+<div class="editor-mode" data-page-id={pageId}>
   <div class="line-numbers">
-    {lines.map((_, index) => <span class="line-number">{index + 1}</span>)}
+    {lineNumbers.map((num) => <span class="line-number">{num}</span>)}
   </div>
-  <pre
-    class="editor-content">
-    <code class="language-markdown" set:html={highlightedContent} />
-  </pre>
+
+  <div class="editor-content">
+    <Prism lang="markdown" code={rawContent} />
+  </div>
 </div>
 
 <style>
@@ -53,9 +54,10 @@ const highlightedContent = Prism.highlight(
   }
 
   .editor-content {
+    padding-inline-start: 1rem;
     flex: 1;
     margin: 0;
-    padding: 1rem;
+    /* padding: 1rem; */
     background: transparent;
     /** if we wrap then line-numbers don't match 
     overflow: hidden;

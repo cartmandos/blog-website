@@ -11,13 +11,17 @@ const { prompt = "guest@portfolio:~$" } = Astro.props
   <label for="stdin" class="prompt">{prompt}</label>
   <div class="input-container">
     <input
+      class="command-text"
       id="stdin"
       type="text"
-      class="command-text"
       autocomplete="off"
       spellcheck="false"
+      autocapitalize="off"
+      autocorrect="off"
+      value=""
+      style="width: 0.25ch"
     />
-    <div class="completion-preview"></div>
+    <span class="completion-preview"></span>
     <span class="cursor"></span>
   </div>
 </div>
@@ -46,8 +50,14 @@ const { prompt = "guest@portfolio:~$" } = Astro.props
     }
 
     private setupEventListeners() {
-      this.input.addEventListener("input", () => this.handleInput())
-      this.input.addEventListener("keydown", (e) => this.handleKeydown(e))
+      this.input.addEventListener("input", () => {
+        this.handleInput()
+        this.updateInputWidth()
+      })
+      this.input.addEventListener("keydown", (e) => {
+        this.handleKeydown(e)
+        this.updateInputWidth()
+      })
     }
 
     private getCompletionContext(): CompletionContext {
@@ -65,6 +75,11 @@ const { prompt = "guest@portfolio:~$" } = Astro.props
         lastPart,
         isPath,
       }
+    }
+
+    private updateInputWidth() {
+      const contentLength = this.input.value.length
+      this.input.style.width = `${Math.max(0.25, contentLength)}ch`
     }
 
     private async handleInput() {
@@ -109,6 +124,7 @@ const { prompt = "guest@portfolio:~$" } = Astro.props
       switch (e.key) {
         case "Tab":
           e.preventDefault()
+
           if (e.shiftKey) {
             this.showCompletion(
               (this.completionIndex - 1 + this.completions.length) %
@@ -164,7 +180,7 @@ const { prompt = "guest@portfolio:~$" } = Astro.props
   }
 
   // Initialize autocompletion
-  const input = document.querySelector(".command-text") as HTMLInputElement
+  const input = document.querySelector("#stdin") as HTMLInputElement
   const preview = document.querySelector(".completion-preview") as HTMLElement
 
   if (input && preview) {
@@ -174,22 +190,25 @@ const { prompt = "guest@portfolio:~$" } = Astro.props
 
 <style>
   .command-input {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
     margin-top: 1rem;
-    position: relative;
     caret-color: transparent;
   }
 
   .input-container {
-    position: relative;
-    display: inline-block;
+    display: inline-flex;
   }
 
   .prompt {
     color: var(--terminal-green);
     opacity: 0.9;
+    white-space: nowrap;
+  }
+
+  .command-text,
+  .completion-preview {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
   }
 
   .command-text {
@@ -199,24 +218,23 @@ const { prompt = "guest@portfolio:~$" } = Astro.props
     font-family: var(--font-mono);
     font-size: inherit;
     outline: none;
-    padding: 0;
   }
 
   .completion-preview {
-    position: absolute;
-    left: 0;
     color: var(--terminal-dim);
     pointer-events: none;
     white-space: pre;
   }
 
   .cursor {
-    position: absolute;
-    left: 0;
-    width: 8px;
+    display: inline-block;
+    width: 0.5em;
     height: 1em;
     background-color: var(--terminal-green);
-    animation: blink var(--cursor-blink-speed) step-end infinite;
+  }
+
+  .command-input:focus-within .cursor {
+    animation: blink 1s step-end infinite;
   }
 
   @keyframes blink {
